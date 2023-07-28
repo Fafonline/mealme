@@ -1,0 +1,31 @@
+version: "3.9" # optional since v1.27.0
+services:
+  db:
+    image: couchbase:latest
+    deploy:
+      replicas: 1
+    ports:
+      - 8091-8094:8091-8094
+      - 11210:11210
+    volumes:
+      - ./couchbase/volumes/data:/opt/couchbase/var
+
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+    ports:
+      - 5000:5000
+
+    volumes:
+      - ./backend:/python-docker
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_APP: ./app.py
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - 80:80

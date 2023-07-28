@@ -1,0 +1,4 @@
+<div *ngFor="let meal of meals">
+    <input type="checkbox" [id]="meal.id" />
+    <label [for]="meal.id">{{ meal.name }}</label>
+</div>

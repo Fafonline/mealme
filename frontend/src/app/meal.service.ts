@@ -5,10 +5,12 @@ import axios from 'axios';
     providedIn: 'root'
 })
 export class MealService {
-    private baseUrl = 'http://backend:5000'; // Replace with your Flask backend URL
+    private baseUrl = 'http://127.0.0.1:5000'; // Replace with your Flask backend URL
 
     getMeals() {
-        return axios.get(`${this.baseUrl}/meals/`);
+        let response = axios.get(`${this.baseUrl}/meals`);
+        console.log(response);
+        return response;
     }
 
     getMealById(mealId: string) {

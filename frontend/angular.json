@@ -26,7 +26,8 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/app/menu.component.css"
+              "src/app/menu.component.css",
+              "src/app/meals.component.css"
             ],
             "scripts": []
           },

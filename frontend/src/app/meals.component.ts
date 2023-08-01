@@ -32,7 +32,8 @@ export class MealsComponent implements OnInit {
             this.mealService.createMeal(meal).then(
                 (response) => {
                     console.log('Meals Imported successfully:', response);
-                    // Handle success, if needed (e.g., show a success message)
+                    // Refresh the meals list
+                    this.getMeals();
                 },
                 (error) => {
                     console.error('Error creating meal:', error);

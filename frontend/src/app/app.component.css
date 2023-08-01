@@ -1,0 +1,10 @@
+.app-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .left-column,
+  .right-column {
+    flex-basis: 50%; /* Set both columns to occupy 50% of the container's width */
+    padding: 10px; /* Optional: Add some padding for spacing */
+  }

@@ -7,6 +7,8 @@ import secrets
 import uuid
 from couchbase.n1ql import N1QLQuery
 import time
+from datetime import datetime
+
 
 app = Flask(__name__)
 
@@ -181,6 +183,27 @@ def update_menu(menu_id):
     current_menu.update(data)
     collection.replace(menu_key, current_menu)
     return jsonify(current_menu)
+
+@app.route("/menu/commit", methods=["POST"])
+def commit_menu():
+    data = request.get_json()
+    meal_ids = data.get("meal_ids", [])
+
+    # Generate a unique ID for the menu
+    menu_unique_id = generate_random_id()
+
+    # Create a new menu document with the list of meal IDs and the generation date
+    menu_data = {
+        "id": menu_unique_id,
+        "meals": meal_ids,
+        "generation_date": datetime.now().isoformat()
+    }
+
+    # Insert the new menu document into Couchbase
+    menu_key = COUCHBASE_MENU_PREFIX + menu_unique_id
+    collection.upsert(menu_key, menu_data)
+
+    return jsonify(menu_data), 201
 
 if __name__ == "__main__":
     app.run(debug=True)

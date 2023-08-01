@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MealsComponent } from './meals.component';
 import { MenuComponent } from './menu.component';
+import { FormsModule } from '@angular/forms'; // Import the FormsModule
+
 
 @NgModule({
   declarations: [
@@ -12,7 +14,8 @@ import { MenuComponent } from './menu.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

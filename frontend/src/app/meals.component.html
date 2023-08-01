@@ -1,4 +1,10 @@
+<h2>Existing meals</h2>
 <div *ngFor="let meal of meals">
     <input type="checkbox" [id]="meal.name" />
     <label [for]="meal.name">{{ meal.name }}</label>
+</div>
+<h2>Import meals from Markdown</h2>
+<div class="meal-input">
+    <textarea [(ngModel)]="markdownInput" placeholder="Enter meals in markdown format"></textarea>
+    <button class="input-button" (click)="createMeals()">Create Meals</button>
 </div>

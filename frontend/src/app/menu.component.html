@@ -1,6 +1,9 @@
-<div *ngFor="let meal of menuMeals">
-    <input type="checkbox" [id]="meal.name" />
-    <label [for]="meal.name">{{ meal.name }}</label>
-</div>
-
-<!-- <h1>Hello</h1> -->
+<h2>Create New Menu</h2>
+<label>Number of meals:</label>
+<input class="text-input" type="number" id="numMeals" [(ngModel)]="numMeals" />
+<br>
+<button class="input-button" (click)="createNewMenu()">Create New Menu</button>
+<!-- Display the list of meal names in the menu -->
+<ul>
+    <li *ngFor="let meal of menuMeals">{{ meal.name }}</li>
+</ul>

@@ -18,5 +18,5 @@ export class MealsComponent implements OnInit {
         this.mealService.getMeals().then((response) => {
             this.meals = response.data;
         });
-    }
+    }  
 }

@@ -138,28 +138,30 @@ def get_menu_by_id(menu_id):
 @app.route("/menu/", methods=["POST"])
 def create_menu():
     data = request.get_json()
-    chosen_meals = data.get("default_meal_ids", [])
+    chosen_meals_ids = data.get("default_meal_ids", [])
     num_meals_to_generate = data.get("num_meals", 5)
-    print(chosen_meals)
-    # Fetch a list of all meal documents from Couchbase starting with "meal::"
-    # CREATE INDEX idx_meal_id ON `your_bucket_name`(id)
-    # WHERE META().id LIKE 'meal::%'
-    query_str = "SELECT id,name,description FROM `{}` WHERE META().id LIKE 'meal::%'".format(COUCHBASE_BUCKET)
-    # Execute the N1QL query to get all meal documents
-    meal_docs = []
-    # for row in cluster.query(query_str):
-    #     meal_docs.append(row)
-    for row in cluster.query(query_str):
-        meal_docs.append(row)
-    # # Pick a random meal and add it to the menu's list of meals
-    while len(chosen_meals) < num_meals_to_generate:
-        random_meal_id = secrets.choice(meal_docs)
-        if random_meal_id not in chosen_meals:
-            chosen_meals.append(random_meal_id)
 
-    # # Generate a new unique ID for the menu
+    # Fetch all available meal IDs using an N1QL query
+    query_str = "SELECT RAW id FROM `{}` WHERE META().id LIKE 'meal::%'".format(COUCHBASE_BUCKET)
+    meal_ids = [row for row in cluster.query(query_str)]
+
+    # Pick a random meal ID and add it to chosen_meals_ids if not already present
+    while len(chosen_meals_ids) < num_meals_to_generate:
+        random_meal_id = secrets.choice(meal_ids)
+        if random_meal_id not in chosen_meals_ids:
+            chosen_meals_ids.append(random_meal_id)
+
+    # Fetch the meal documents using the chosen meal IDs
+    menu_meals = []
+    for meal_id in chosen_meals_ids:
+        meal_key = COUCHBASE_MEAL_PREFIX + meal_id
+        meal = collection.get(meal_key).value
+        if meal:
+            menu_meals.append(meal)
+
+    # Generate a new unique ID for the menu
     menu_unique_id = generate_random_id()
-    menu_data = {"id": menu_unique_id, "meals": chosen_meals}
+    menu_data = {"id": menu_unique_id, "meals": menu_meals}
 
     # Insert the new menu document into Couchbase
     menu_key = COUCHBASE_MENU_PREFIX + menu_unique_id

@@ -27,7 +27,7 @@ export class MenuComponent implements OnInit {
                 console.log('Menu created successfully:', response);
 
                 // Extract the meals array from the API response
-                const mealsArray = response.data?.meals;
+                const mealsArray = response?.meals;
 
                 // Update the menuMeals array with the meal names
                 this.menuMeals = mealsArray?.map((meal: any) => ({

@@ -10,7 +10,7 @@
 
 <div class="meal-list">
     <div *ngFor="let meal of menuMeals" class="meal-item">
-        <input type="checkbox" [id]="meal.name" />
+        <input type="checkbox" [checked]="selectedMeals.includes(meal.id)" (change)="onMealSelected(meal.id)">
         <label [for]="meal.name">{{ meal.name }}</label>
     </div>
 </div>

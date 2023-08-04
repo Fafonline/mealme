@@ -9,7 +9,8 @@ import { MenuService } from './menu.service';
 export class MenuComponent implements OnInit {
     menuMeals: { id: string; name: string; description: string }[] = [];
     numMeals: number = 5; // Default value for the number of meals to generate
-    nom: string = '';
+    selectedMeals: string[] = [];
+
     constructor(private menuService: MenuService) { }
 
     ngOnInit() {
@@ -18,7 +19,8 @@ export class MenuComponent implements OnInit {
     // Method to handle the button click event
     createNewMenu() {
         const menuData = {
-            num_meals: this.numMeals, // Example number of meals to generate
+            num_meals: this.numMeals, // Example number of meals to generate,
+            "default_meal_ids": this.selectedMeals
         };
         // Call the createMenu method from the MenuService
         this.menuService.createMenu(menuData).then(
@@ -40,5 +42,19 @@ export class MenuComponent implements OnInit {
                 // Handle error, if needed (e.g., show an error message)
             }
         );
+    }
+    // Function to handle the click event when a meal is selected or deselected
+    onMealSelected(mealId: string) {
+        // Check if the mealId is already in the selectedMeals list
+        const index = this.selectedMeals.indexOf(mealId);
+
+        // If the mealId is not in the list, add it
+        if (index === -1) {
+            this.selectedMeals.push(mealId);
+        } else {
+            // If the mealId is already in the list, remove it
+            this.selectedMeals.splice(index, 1);
+        }
+        console.log("Selected Meals:", this.selectedMeals);
     }
 }

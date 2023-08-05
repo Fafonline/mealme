@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuService } from './menu.service';
+import { SharedService } from './shared.service';
 
 @Component({
     selector: 'app-menu',
@@ -9,19 +10,23 @@ import { MenuService } from './menu.service';
 export class MenuComponent implements OnInit {
     menuMeals: { id: string; name: string; description: string }[] = [];
     numMeals: number = 5; // Default value for the number of meals to generate
-    selectedMeals: string[] = [];
-
-    constructor(private menuService: MenuService) { }
+    mealSelections: { [key: string]: boolean } = {};
+    constructor(private menuService: MenuService, private sharedService: SharedService) { }
 
     ngOnInit() {
     }
-
+    getSelectedMeals(): string[] {
+        // Use Object.keys() to get an array of keys from the mealSelections object
+        // Use Array.filter() to filter only the keys with true value
+        return Object.keys(this.mealSelections).filter((key) => this.mealSelections[key]);
+    }
     // Method to handle the button click event
     createNewMenu() {
         const menuData = {
             num_meals: this.numMeals, // Example number of meals to generate,
-            "default_meal_ids": this.selectedMeals
+            "default_meal_ids": this.sharedService.getSelectedMeals().map((meal) => meal.id)
         };
+        console.log("Menu Data:", menuData);
         // Call the createMenu method from the MenuService
         this.menuService.createMenu(menuData).then(
             (response) => {
@@ -43,18 +48,20 @@ export class MenuComponent implements OnInit {
             }
         );
     }
-    // Function to handle the click event when a meal is selected or deselected
-    onMealSelected(mealId: string) {
-        // Check if the mealId is already in the selectedMeals list
-        const index = this.selectedMeals.indexOf(mealId);
 
-        // If the mealId is not in the list, add it
-        if (index === -1) {
-            this.selectedMeals.push(mealId);
+    isMealSelected(meal: any) {
+        const selectedMeals = this.sharedService.getSelectedMeals();
+        return (selectedMeals.some((m) => m.id === meal.id));
+    }
+    toggleMealSelection(meal: any) {
+        if (this.isMealSelected(meal)) {
+            this.sharedService.removeSelectedMeal(meal);
+            this.mealSelections[meal.id] = false;
         } else {
-            // If the mealId is already in the list, remove it
-            this.selectedMeals.splice(index, 1);
+            this.sharedService.addSelectedMeal(meal);
+            this.mealSelections[meal.id] = true;
         }
-        console.log("Selected Meals:", this.selectedMeals);
+        const selectedMeals = this.sharedService.getSelectedMeals();
+        console.log("Item selected from generated menu:", selectedMeals);
     }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MealService } from './meal.service';
+import { SharedService } from './shared.service';
 
 @Component({
     selector: 'app-meals',
@@ -8,9 +9,11 @@ import { MealService } from './meal.service';
 export class MealsComponent implements OnInit {
     meals: any[] = [];
     markdownInput: string = '';
+    mealSelections: { [key: string]: boolean } = {};
+
+    constructor(private mealService: MealService, private sharedService: SharedService) { }
 
 
-    constructor(private mealService: MealService) { }
 
     ngOnInit() {
         this.getMeals();
@@ -54,5 +57,20 @@ export class MealsComponent implements OnInit {
 
         // Filter out any empty or whitespace-only names
         return mealNames.filter((name) => name.trim() !== '');
+    }
+    isMealSelected(meal: any) {
+        const selectedMeals = this.sharedService.getSelectedMeals();
+        return (selectedMeals.some((m) => m === meal));
+    }
+    toggleMealSelection(meal: any) {
+        if (this.isMealSelected(meal)) {
+            this.sharedService.removeSelectedMeal(meal);
+            this.mealSelections[meal.id] = false;
+        } else {
+            this.sharedService.addSelectedMeal(meal);
+            this.mealSelections[meal.id] = true;
+        }
+        const selectedMeals = this.sharedService.getSelectedMeals();
+        console.log("Item selected from existing meals:", selectedMeals);
     }
 }

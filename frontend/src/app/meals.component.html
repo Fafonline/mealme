@@ -1,7 +1,8 @@
 <h2>Existing meals ({{ meals.length }})</h2>
 <div class="meal-list">
-    <div *ngFor="let meal of meals.slice(0, 10)" class="meal-item">
-        <input type="checkbox" [id]="meal.name" />
+    <div *ngFor="let meal of meals" class="meal-item">
+        <!-- <input type="checkbox" [id]="meal.name" /> -->
+        <input type="checkbox" [(ngModel)]="mealSelections[meal.id]" (change)="toggleMealSelection(meal)" />
         <label [for]="meal.name">{{ meal.name }}</label>
     </div>
 </div>

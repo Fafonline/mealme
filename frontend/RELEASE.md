@@ -1,0 +1,1 @@
+Selection from Existing and generated responding. Bug: When selected from Existing, when generated selected Item is not checked.

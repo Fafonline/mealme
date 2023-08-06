@@ -1,28 +1,25 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SharedService {
-    private selectedMealsSubject = new BehaviorSubject<any[]>([]);
-    selectedMeals$ = this.selectedMealsSubject.asObservable();
+    private mealSelectionSubject = new BehaviorSubject<{ [key: string]: boolean }>({});
+    mealSelection$: Observable<{ [key: string]: boolean }> = this.mealSelectionSubject.asObservable();
 
-    constructor() { }
-
-    getSelectedMeals() {
-        let selectedMeals = this.selectedMealsSubject.getValue();
-        return this.selectedMealsSubject.getValue();
+    getMealSelection(): { [key: string]: boolean } {
+        return this.mealSelectionSubject.getValue();
     }
 
-    addSelectedMeal(meal: any) {
-        const currentMeals = this.selectedMealsSubject.getValue();
-        this.selectedMealsSubject.next([...currentMeals, meal]);
+    getSelectedMeals(): string[] {
+        return Object.keys(this.mealSelectionSubject.getValue()).filter((key) => this.mealSelectionSubject.getValue()[key]);
     }
 
-    removeSelectedMeal(meal: any) {
-        const currentMeals = this.selectedMealsSubject.getValue();
-        const updatedMeals = currentMeals.filter((m) => m.id !== meal.id);
-        this.selectedMealsSubject.next(updatedMeals);
+    toggleMealSelection(meal: any): void {
+        const currentSelection = this.getMealSelection();
+        const updatedSelection = { ...currentSelection, [meal.id]: currentSelection[meal.id] };
+        this.mealSelectionSubject.next(updatedSelection);
+        console.log("Value after shared service toggle:", this.getMealSelection())
     }
 }

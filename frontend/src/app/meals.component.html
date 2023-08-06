@@ -2,7 +2,7 @@
 <div class="meal-list">
     <div *ngFor="let meal of meals" class="meal-item">
         <!-- <input type="checkbox" [id]="meal.name" /> -->
-        <input type="checkbox" [(ngModel)]="mealSelections[meal.id]" (change)="toggleMealSelection(meal)" />
+        <input type="checkbox" [(ngModel)]="mealSelection[meal.id]" (change)="toggleMealSelection(meal)" />
         <label [for]="meal.name">{{ meal.name }}</label>
     </div>
 </div>

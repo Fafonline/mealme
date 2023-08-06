@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MealService } from './meal.service';
+import { Subscription } from 'rxjs';
 import { SharedService } from './shared.service';
 
 @Component({
@@ -9,14 +10,21 @@ import { SharedService } from './shared.service';
 export class MealsComponent implements OnInit {
     meals: any[] = [];
     markdownInput: string = '';
-    mealSelections: { [key: string]: boolean } = {};
-
+    mealSelection: { [key: string]: boolean } = {};
+    private mealSelectionSubscription!: Subscription;
     constructor(private mealService: MealService, private sharedService: SharedService) { }
 
 
 
     ngOnInit() {
         this.getMeals();
+        this.mealSelectionSubscription = this.sharedService.mealSelection$.subscribe(
+            (selection) => {
+                console.log("!!!Meals callback:", selection);
+                console.log("!!!Meals meals selection:", this.mealSelection);
+                this.mealSelection = selection;
+            }
+        );
     }
 
     getMeals() {
@@ -58,19 +66,10 @@ export class MealsComponent implements OnInit {
         // Filter out any empty or whitespace-only names
         return mealNames.filter((name) => name.trim() !== '');
     }
-    isMealSelected(meal: any) {
-        const selectedMeals = this.sharedService.getSelectedMeals();
-        return (selectedMeals.some((m) => m === meal));
-    }
     toggleMealSelection(meal: any) {
-        if (this.isMealSelected(meal)) {
-            this.sharedService.removeSelectedMeal(meal);
-            this.mealSelections[meal.id] = false;
-        } else {
-            this.sharedService.addSelectedMeal(meal);
-            this.mealSelections[meal.id] = true;
-        }
-        const selectedMeals = this.sharedService.getSelectedMeals();
-        console.log("Item selected from existing meals:", selectedMeals);
+        this.sharedService.toggleMealSelection(meal);
+        console.log("Item selected from existing meals:", this.sharedService.getSelectedMeals());
+
     }
+
 }

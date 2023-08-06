@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { MealService } from './meal.service';
 import { Subscription } from 'rxjs';
 import { SharedService } from './shared.service';
-
+import { Meal } from './meal.model'
 @Component({
     selector: 'app-meals',
     templateUrl: './meals.component.html'
 })
 export class MealsComponent implements OnInit {
-    meals: any[] = [];
+    meals: Meal[] = [];
     markdownInput: string = '';
     mealSelection: { [key: string]: boolean } = {};
     private mealSelectionSubscription!: Subscription;
@@ -36,7 +36,7 @@ export class MealsComponent implements OnInit {
     createMeals() {
         const mealNames = this.parseMarkdownInput();
         const mealsToCreate = mealNames.map((name) => {
-            return { name: name.trim() };
+            return new Meal('', name.trim(), ''); // Create a new Meal instance with the provided name
         });
         // Call the createMeal method from the MenuService for each meal
         mealsToCreate.forEach((meal) => {
@@ -66,7 +66,7 @@ export class MealsComponent implements OnInit {
         // Filter out any empty or whitespace-only names
         return mealNames.filter((name) => name.trim() !== '');
     }
-    toggleMealSelection(meal: any) {
+    toggleMealSelection(meal: Meal) {
         this.sharedService.toggleMealSelection(meal);
         console.log("Item selected from existing meals:", this.sharedService.getSelectedMeals());
 

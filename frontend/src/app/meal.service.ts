@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
+import { Meal } from './meal.model'
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,7 @@ export class MealService {
         return axios.get(`${this.baseUrl}/meal/${mealId}`);
     }
 
-    createMeal(data: any) {
+    createMeal(data: Meal) {
         return axios.post(`${this.baseUrl}/meal/`, data);
     }
 

@@ -199,6 +199,16 @@ def commit_menu():
         "generation_date": datetime.now().isoformat()
     }
 
+    # Fetch the corresponding meals for each meal ID and update the preparation_count
+    for meal_id in meal_ids:
+        meal_key = COUCHBASE_MEAL_PREFIX + meal_id
+        meal = collection.get(meal_key).value
+        if meal:
+            meal["preparation_count"] = meal.get("preparation_count", 0) + 1
+            meal["last_commit_date"] = datetime.now().isoformat()
+            collection.upsert(meal_key, meal)
+
+
     # Insert the new menu document into Couchbase
     menu_key = COUCHBASE_MENU_PREFIX + menu_unique_id
     collection.upsert(menu_key, menu_data)

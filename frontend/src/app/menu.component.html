@@ -14,3 +14,6 @@
         <label [for]="meal.name">{{ meal.name }}</label>
     </div>
 </div>
+
+<!-- Button to trigger commit_menu -->
+<button class="input-button-commit" *ngIf="menuMeals.length > 0" (click)="commitMenu()">Commit Menu</button>

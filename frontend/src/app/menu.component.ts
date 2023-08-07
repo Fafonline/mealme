@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuService } from './menu.service';
 import { SharedService } from './shared.service';
 import { Subscription } from 'rxjs';
-
+import { Meal } from './meal.model'
 
 @Component({
     selector: 'app-menu',
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit {
-    menuMeals: { id: string; name: string; description: string }[] = [];
+    menuMeals: Meal[] = [];
     numMeals: number = 5; // Default value for the number of meals to generate
     mealSelection: { [key: string]: boolean } = {};
     private mealSelectionSubscription!: Subscription;
@@ -59,6 +59,29 @@ export class MenuComponent implements OnInit {
             },
             (error) => {
                 console.error('Error creating menu:', error);
+                // Handle error, if needed (e.g., show an error message)
+            }
+        );
+    }
+    commitMenu() {
+        // Get the IDs of the meals in the generated menu that are selected
+        const selectedMealsIds = this.menuMeals
+            .map((meal) => meal.id);
+
+        console.log("Commit menu wit ids:", selectedMealsIds);
+
+        const data = {
+            meal_ids: selectedMealsIds
+        };
+        // Call the commit_menu service with the selected meal IDs
+        this.menuService.commitMenu(data).then(
+            (response) => {
+                console.log('Menu committed successfully:', response);
+                // Handle success, if needed (e.g., show a success message)
+                this.menuMeals = [];
+            },
+            (error) => {
+                console.error('Error committing menu:', error);
                 // Handle error, if needed (e.g., show an error message)
             }
         );

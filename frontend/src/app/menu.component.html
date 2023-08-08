@@ -2,7 +2,9 @@
 <label>Number of meals:</label>
 <input class="text-input" type="number" id="numMeals" [(ngModel)]="numMeals" />
 <br>
-<button class="input-button" (click)="createNewMenu()">Create New Menu</button>
+<button class="input-button" (click)="createNewMenu()">{{generateButtonLabel}}</button>
+<!-- Button to trigger commit_menu -->
+<button class="input-button-commit" *ngIf="menuMeals.length > 0" (click)="commitMenu()">Can wait, I'm in!</button>
 <!-- Display the list of meal names in the menu -->
 <!-- <ul>
     <li *ngFor="let meal of menuMeals">{{ meal.name }}</li>
@@ -14,6 +16,3 @@
         <label [for]="meal.name">{{ meal.name }}</label>
     </div>
 </div>
-
-<!-- Button to trigger commit_menu -->
-<button class="input-button-commit" *ngIf="menuMeals.length > 0" (click)="commitMenu()">Commit Menu</button>

@@ -11,6 +11,8 @@ import { Meal } from './meal.model'
 })
 export class MenuComponent implements OnInit {
     menuMeals: Meal[] = [];
+    menuId: undefined;
+    generateButtonLabel = "Hungry? Click here to get your meal!";
     numMeals: number = 5; // Default value for the number of meals to generate
     mealSelection: { [key: string]: boolean } = {};
     private mealSelectionSubscription!: Subscription;
@@ -36,6 +38,20 @@ export class MenuComponent implements OnInit {
         // Use Array.filter() to filter only the keys with true value
         return Object.keys(this.mealSelection).filter((key) => this.mealSelection[key]);
     }
+    updateMenuModel(response: any) {
+        // Extract the meals array from the API response
+        const mealsArray = response?.meals;
+        // Update the menuMeals array with the meal names
+        this.menuMeals = mealsArray?.map((meal: any) => ({
+            id: meal.id,
+            name: meal.name,
+            description: meal.description,
+        }));
+        this.menuId = response.id;
+        if (this.menuId !== undefined) {
+            this.generateButtonLabel = "Yummy? Try again!"
+        }
+    }
     // Method to handle the button click event
     createNewMenu() {
         const menuData = {
@@ -43,25 +59,32 @@ export class MenuComponent implements OnInit {
             "default_meal_ids": this.sharedService.getSelectedMeals()
         };
         console.log("Menu Data:", menuData);
-        // Call the createMenu method from the MenuService
-        this.menuService.createMenu(menuData).then(
-            (response) => {
-                console.log('Menu created successfully:', response);
+        if (this.menuId === undefined) {
+            // Call the createMenu method from the MenuService
+            this.menuService.createMenu(menuData).then(
+                (response) => {
+                    console.log('Menu created successfully:', response);
+                    this.updateMenuModel(response);
+                },
+                (error) => {
+                    console.error('Error creating menu:', error);
+                    // Handle error, if needed (e.g., show an error message)
+                }
+            );
+        }
+        else {
+            this.menuService.updateMenu(this.menuId, menuData).then(
+                (response) => {
+                    console.log('Menu Updated successfully:', response);
+                    this.updateMenuModel(response);
+                },
+                (error) => {
+                    console.error('Error Updating menu:', error);
+                    // Handle error, if needed (e.g., show an error message)
+                }
+            );
+        }
 
-                // Extract the meals array from the API response
-                const mealsArray = response?.meals;
-                // Update the menuMeals array with the meal names
-                this.menuMeals = mealsArray?.map((meal: any) => ({
-                    id: meal.id,
-                    name: meal.name,
-                    description: meal.description,
-                }));
-            },
-            (error) => {
-                console.error('Error creating menu:', error);
-                // Handle error, if needed (e.g., show an error message)
-            }
-        );
     }
     commitMenu() {
         // Get the IDs of the meals in the generated menu that are selected

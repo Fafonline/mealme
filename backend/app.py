@@ -17,7 +17,7 @@ def add_cors_headers(response):
     # response.headers['Access-Control-Allow-Origin'] = 'http://localhost'
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Headers'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
     return response
 
 
@@ -136,9 +136,7 @@ def get_menu_by_id(menu_id):
         return jsonify(menu)
     return jsonify({"error": "Menu not found"}), 404
 
-@app.route("/menu/", methods=["POST"])
-def create_menu():
-    data = request.get_json()
+def generate_meal(data):
     chosen_meals_ids = data.get("default_meal_ids", [])
     num_meals_to_generate = data.get("num_meals", 5)
 
@@ -159,13 +157,28 @@ def create_menu():
         meal = collection.get(meal_key).value
         if meal:
             menu_meals.append(meal)
+    return menu_meals
 
+
+@app.route("/menu/", methods=["POST"])
+def create_menu():
+    data = request.get_json()
+    menu_meals = generate_meal(data)
     # Generate a new unique ID for the menu
     menu_unique_id = generate_random_id()
     menu_data = {"id": menu_unique_id, "meals": menu_meals}
-
     # Insert the new menu document into Couchbase
     menu_key = COUCHBASE_MENU_PREFIX + menu_unique_id
+    collection.upsert(menu_key, menu_data)
+    return jsonify(menu_data), 201
+    
+@app.route("/menu/<menu_id>", methods=["PATCH"])
+def update_menu(menu_id):
+    data = request.get_json()
+    menu_meals = generate_meal(data)
+    menu_data = {"id": menu_id, "meals": menu_meals}
+    # Insert the new menu document into Couchbase
+    menu_key = COUCHBASE_MENU_PREFIX + menu_id
     collection.upsert(menu_key, menu_data)
     return jsonify(menu_data), 201
 
@@ -209,20 +222,6 @@ def select_meals(meals_scores, num_meals_to_generate, default_meals):
         # Remove the selected meal from the scores dictionary to avoid selecting it again
         meals_scores.pop(meal_id)
     return selected_meals_ids
-
-
-@app.route("/menu/<menu_id>", methods=["PATCH"])
-def update_menu(menu_id):
-    data = request.get_json()
-    menu_key = COUCHBASE_MENU_PREFIX + menu_id
-    current_menu = collection.get(menu_key).value
-    if not current_menu:
-        return jsonify({"error": "Menu not found"}), 404
-
-    # Update the current menu document with the new data
-    current_menu.update(data)
-    collection.replace(menu_key, current_menu)
-    return jsonify(current_menu)
 
 @app.route("/menu/commit", methods=["POST"])
 def commit_menu():

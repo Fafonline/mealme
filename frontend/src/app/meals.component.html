@@ -1,11 +1,14 @@
 <h2>Existing meals ({{ meals.length }})</h2>
 <div class="meal-list">
-    <div *ngFor="let meal of meals" class="meal-item">
+    <div *ngFor="let meal of meals" class="meal-item" (click)="openEditModal(meal)">
         <!-- <input type="checkbox" [id]="meal.name" /> -->
         <input type="checkbox" [(ngModel)]="mealSelection[meal.id]" (change)="toggleMealSelection(meal)" />
         <label [for]="meal.name">{{ meal.name }}</label>
     </div>
 </div>
+
+<app-meal-modal [meal]="selectedMeal" (cancel)="closeEditModal()" (save)="updateMeal($event)"></app-meal-modal>
+
 <h2>Import meals from Markdown</h2>
 <div class="meal-input">
     <textarea [(ngModel)]="markdownInput" placeholder="Enter meals in markdown format"></textarea>

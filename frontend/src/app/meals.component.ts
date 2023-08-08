@@ -3,6 +3,8 @@ import { MealService } from './meal.service';
 import { Subscription } from 'rxjs';
 import { SharedService } from './shared.service';
 import { Meal } from './meal.model'
+import { MealModalComponent } from './meal-modal/meal-modal.component';
+
 @Component({
     selector: 'app-meals',
     templateUrl: './meals.component.html'
@@ -13,6 +15,7 @@ export class MealsComponent implements OnInit {
     mealSelection: { [key: string]: boolean } = {};
     private mealSelectionSubscription!: Subscription;
     constructor(private mealService: MealService, private sharedService: SharedService) { }
+    selectedMeal: Meal = { "id": "", "description": "", "name": "" };
 
 
 
@@ -72,4 +75,21 @@ export class MealsComponent implements OnInit {
 
     }
 
+    // Method to open the edit modal
+    openEditModal(meal: Meal) {
+        console.log("Clicked on meal:", meal);
+        this.sharedService.showMealEditPopup();
+    }
+
+    // Method to close the edit modal
+    closeEditModal() {
+        this.selectedMeal = new Meal('', '', '');
+    }
+
+    // Method to update the meal data after editing
+    updateMeal(updatedMeal: Meal) {
+        // Update the meal data in your meals array or make an API call
+        // and close the modal
+        this.selectedMeal = new Meal('', '', '');
+    }
 }

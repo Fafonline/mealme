@@ -8,6 +8,9 @@ export class SharedService {
     private mealSelectionSubject = new BehaviorSubject<{ [key: string]: boolean }>({});
     mealSelection$: Observable<{ [key: string]: boolean }> = this.mealSelectionSubject.asObservable();
 
+    private showEditModelSubject = new BehaviorSubject<boolean>(false);
+    showEditModel$: Observable<boolean> = this.showEditModelSubject.asObservable();
+
     getMealSelection(): { [key: string]: boolean } {
         return this.mealSelectionSubject.getValue();
     }
@@ -21,5 +24,9 @@ export class SharedService {
         const updatedSelection = { ...currentSelection, [meal.id]: currentSelection[meal.id] };
         this.mealSelectionSubject.next(updatedSelection);
         console.log("Value after shared service toggle:", this.getMealSelection())
+    }
+    showMealEditPopup() {
+        console.log("Update showEditModelSubject")
+        this.showEditModelSubject.next(true);
     }
 }

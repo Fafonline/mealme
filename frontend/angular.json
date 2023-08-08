@@ -27,7 +27,8 @@
             "styles": [
               "src/styles.css",
               "src/app/menu.component.css",
-              "src/app/meals.component.css"
+              "src/app/meals.component.css",
+              "src/app/meal-modal/meal-modal.component.css"
             ],
             "scripts": []
           },
@@ -96,5 +97,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "3d20735a-753f-48d7-9ad5-9eb2f80a7940"
   }
 }

@@ -5,12 +5,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MealsComponent } from './meals.component';
 import { MenuComponent } from './menu.component';
-import { FormsModule } from '@angular/forms'; // Import the FormsModule
-
+import { FormsModule } from '@angular/forms';
+import { MealModalComponent } from './meal-modal/meal-modal.component';
 
 @NgModule({
   declarations: [
-    AppComponent, MealsComponent, MenuComponent
+    AppComponent, MealsComponent, MenuComponent, MealModalComponent
   ],
   imports: [
     BrowserModule,

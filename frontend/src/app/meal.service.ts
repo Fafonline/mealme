@@ -25,5 +25,8 @@ export class MealService {
     updateMeal(data: Meal) {
         return axios.patch(`${this.baseUrl}/meal/${data.id}`, data);
     }
+    removeMeal(mealId: string) {
+        return axios.delete(`${this.baseUrl}/meal/${mealId}`);
+    }
     // Add other API calls for updating and deleting meals if needed
 }

@@ -1,13 +1,46 @@
 /* Add this style to add a vertical scrollbar to the meal list container */
 .meal-list {
-    height: 300px; /* Adjust the height as per your requirement */
-    overflow-y: auto;
-  }
-  
-  /* Add this style for individual meal items */
-  .meal-item {
-    /* Add your styles for each meal item here, e.g., padding, margin, etc. */
-    padding: 10px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-  }
+  height: 300px;
+  /* Adjust the height as per your requirement */
+  overflow-y: auto;
+}
+
+/* Add this style for individual meal items */
+.meal-item {
+  /* Add your styles for each meal item here, e.g., padding, margin, etc. */
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  /* Make sure the container for each meal allows for text wrapping as well */
+  white-space: normal;
+  display: flex;
+  justify-content: space-between;
+  align-items: left;
+}
+
+.delete-button,
+.edit-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+.delete-button {
+  color: red;
+}
+
+.delete-button:hover {
+  color: darkred;
+}
+
+.edit-button {
+  color: rgb(102, 153, 225);
+  align-items: right;
+}
+
+.edit-button:hover {
+  color: rgb(75, 112, 164);
+}

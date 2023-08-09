@@ -35,11 +35,14 @@ export class MealModalComponent implements OnInit {
     );
     this.mealToEditSubscrption = this.sharedService.mealToEdit$.subscribe(
       (mealToEdit) => {
-        console.log("!!!Meal to edit:", mealToEdit);
-        this.mealService.getMealById(mealToEdit.id).then((response) => {
-          this.editedMeal = response.data;
-        });
-        this.editedMeal = mealToEdit;
+        if (mealToEdit.id !== '') {
+
+          console.log("!!!Meal to edit:", mealToEdit);
+          this.mealService.getMealById(mealToEdit.id).then((response) => {
+            this.editedMeal = response.data;
+          });
+          this.editedMeal = mealToEdit;
+        }
       }
     );
   }

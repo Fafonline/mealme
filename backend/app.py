@@ -93,7 +93,7 @@ def get_meal_by_id(meal_id):
 @app.route("/meals", methods=["GET"])
 def get_meals():
     # Fetch all meals from the Couchbase bucket
-    query = "SELECT id, name, description FROM `{}` WHERE META().id LIKE 'meal::%'".format(COUCHBASE_BUCKET)
+    query = "SELECT id, name, description FROM `{}` WHERE META().id LIKE 'meal::%' ORDER BY name".format(COUCHBASE_BUCKET)
     result = cluster.query(query)
     meals = [row for row in result]
     
@@ -253,6 +253,16 @@ def commit_menu():
     collection.upsert(menu_key, menu_data)
 
     return jsonify(menu_data), 201
+
+@app.route("/meal/<meal_id>", methods=["DELETE"])
+def delete_meal(meal_id):
+    meal_key = COUCHBASE_MEAL_PREFIX + meal_id
+    try:
+        collection.remove(meal_key)
+        return jsonify({"message": "Meal deleted successfully"}), 200
+    except Exception as e:
+        print(f"Failed to delete meal: {str(e)}")
+        return jsonify({"error": "Failed to delete meal"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)

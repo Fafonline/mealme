@@ -1,17 +1,27 @@
-<h2>Existing meals ({{ meals.length }})</h2>
-<div class="meal-list">
-    <div *ngFor="let meal of meals" class="meal-item" (click)="openEditModal(meal)">
-        <!-- <input type="checkbox" [id]="meal.name" /> -->
-        <input type="checkbox" [(ngModel)]="mealSelection[meal.id]" (change)="toggleMealSelection(meal)" />
-        <label [for]="meal.name">{{ meal.name }}</label>
-    </div>
-</div>
-
-<app-meal-modal [meal]="selectedMeal" (cancel)="closeEditModal()" (save)="updateMeal($event)"></app-meal-modal>
-
 <h2>Import meals from Markdown</h2>
 <div class="meal-input">
     <textarea [(ngModel)]="markdownInput" placeholder="Enter meals in markdown format"></textarea>
     <br>
     <button class="input-button" (click)="createMeals()">Create Meals</button>
 </div>
+
+<h2>Existing meals ({{ meals.length }})</h2>
+<div class="meal-list">
+    <div *ngFor="let meal of meals" class="meal-item">
+        <!-- <input type="checkbox" [id]="meal.name" /> -->
+        <span>
+            <input type="checkbox" [(ngModel)]="mealSelection[meal.id]" (change)="toggleMealSelection(meal)" />
+            <label [for]="meal.name">{{ meal.name }}</label>
+        </span>
+        <span>
+            <button class="edit-button" (click)="openEditModal(meal)">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="delete-button" (click)="removeMeal(meal.id)">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </span>
+    </div>
+</div>
+
+<app-meal-modal [meal]="selectedMeal" (cancel)="closeEditModal()" (save)="updateMeal($event)"></app-meal-modal>

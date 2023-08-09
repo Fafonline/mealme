@@ -92,4 +92,11 @@ export class MealsComponent implements OnInit {
         // and close the modal
         this.selectedMeal = new Meal('', '', '');
     }
+
+    removeMeal(mealId: string) {
+        this.mealService.removeMeal(mealId).then((response) => {
+            console.log("Removed with success:", mealId)
+            this.getMeals();
+        });
+    }
 }

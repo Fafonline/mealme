@@ -78,7 +78,7 @@ export class MealsComponent implements OnInit {
     // Method to open the edit modal
     openEditModal(meal: Meal) {
         console.log("Clicked on meal:", meal);
-        this.sharedService.showMealEditPopup();
+        this.sharedService.showMealEditPopup(meal);
     }
 
     // Method to close the edit modal

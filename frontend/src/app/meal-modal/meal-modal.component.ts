@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Meal } from '../meal.model';
 import { SharedService } from '../shared.service';
 import { Subscription } from 'rxjs';
+import { MealService } from '../meal.service';
+
 
 @Component({
   selector: 'app-meal-modal',
@@ -20,7 +22,8 @@ export class MealModalComponent implements OnInit {
   editedMeal: Meal = { id: '', name: '', description: '' };
   showModal = false;
   private showEditModalSubscrption!: Subscription;
-  constructor(private sharedService: SharedService) { };
+  private mealToEditSubscrption!: Subscription;
+  constructor(private sharedService: SharedService, private mealService: MealService) { };
 
   ngOnInit() {
     console.log("Init Modal Edit")
@@ -28,6 +31,15 @@ export class MealModalComponent implements OnInit {
       (showEditModal) => {
         console.log("!!!showEditModal:", showEditModal);
         this.showModal = showEditModal;
+      }
+    );
+    this.mealToEditSubscrption = this.sharedService.mealToEdit$.subscribe(
+      (mealToEdit) => {
+        console.log("!!!Meal to edit:", mealToEdit);
+        this.mealService.getMealById(mealToEdit.id).then((response) => {
+          this.editedMeal = response.data;
+        });
+        this.editedMeal = mealToEdit;
       }
     );
   }
@@ -50,6 +62,9 @@ export class MealModalComponent implements OnInit {
   }
 
   saveChanges() {
+    this.mealService.updateMeal(this.editedMeal).then((response) => {
+      console.log('Meal update successfully:', response);
+    });
     this.closeModal();
   }
 }

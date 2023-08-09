@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-
+import { Meal } from "./meal.model"
 @Injectable({
     providedIn: 'root',
 })
@@ -10,6 +10,9 @@ export class SharedService {
 
     private showEditModelSubject = new BehaviorSubject<boolean>(false);
     showEditModel$: Observable<boolean> = this.showEditModelSubject.asObservable();
+
+    private mealToEditSubject = new BehaviorSubject<Meal>(new Meal('', '', ''));
+    mealToEdit$: Observable<Meal> = this.mealToEditSubject.asObservable();
 
     getMealSelection(): { [key: string]: boolean } {
         return this.mealSelectionSubject.getValue();
@@ -25,8 +28,9 @@ export class SharedService {
         this.mealSelectionSubject.next(updatedSelection);
         console.log("Value after shared service toggle:", this.getMealSelection())
     }
-    showMealEditPopup() {
+    showMealEditPopup(meal: Meal) {
         console.log("Update showEditModelSubject")
         this.showEditModelSubject.next(true);
+        this.mealToEditSubject.next(meal);
     }
 }

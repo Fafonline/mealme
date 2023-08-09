@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Meal } from '../meal.model';
-import { SharedService } from '../shared.service';
+import { Meal } from '../meal/meal.model';
+import { SharedService } from '../shared/shared.service';
 import { Subscription } from 'rxjs';
-import { MealService } from '../meal.service';
+import { MealService } from '../meal/meal.service';
 
 
 @Component({

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MealService } from './meal.service';
 import { Subscription } from 'rxjs';
-import { SharedService } from './shared.service';
+import { SharedService } from '../shared/shared.service';
 import { Meal } from './meal.model'
-import { MealModalComponent } from './meal-modal/meal-modal.component';
 
 @Component({
     selector: 'app-meals',

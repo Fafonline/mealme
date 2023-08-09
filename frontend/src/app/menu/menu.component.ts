@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuService } from './menu.service';
-import { SharedService } from './shared.service';
+import { SharedService } from '../shared/shared.service';
 import { Subscription } from 'rxjs';
-import { Meal } from './meal.model'
+import { Meal } from '../meal/meal.model'
 
 @Component({
     selector: 'app-menu',

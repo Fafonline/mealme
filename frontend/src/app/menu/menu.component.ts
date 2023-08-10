@@ -3,6 +3,8 @@ import { MenuService } from './menu.service';
 import { SharedService } from '../shared/shared.service';
 import { Subscription } from 'rxjs';
 import { Meal } from '../meal/meal.model'
+import { Menu } from './menu.model'
+
 
 @Component({
     selector: 'app-menu',
@@ -12,6 +14,7 @@ import { Meal } from '../meal/meal.model'
 export class MenuComponent implements OnInit {
     menuMeals: Meal[] = [];
     menuId: undefined;
+    menuList: Menu[] = [];
     generateButtonLabel = "Hungry? Click here to get your meal!";
     numMeals: number = 5; // Default value for the number of meals to generate
     mealSelection: { [key: string]: boolean } = {};
@@ -20,6 +23,8 @@ export class MenuComponent implements OnInit {
     constructor(private menuService: MenuService, private sharedService: SharedService) { }
 
     ngOnInit() {
+        // Fetch all menus when the component initializes
+        this.fetchAllMenus();
         this.mealSelectionSubscription = this.sharedService.mealSelection$.subscribe(
             (selection) => {
                 console.log("!!!Menu callback:", selection);
@@ -28,7 +33,10 @@ export class MenuComponent implements OnInit {
             }
         );
     }
-
+    viewMenuDetails(menuId: string) {
+        // Navigate to a separate component or route to show detailed menu view
+        console.log("Display menu detail:", menuId);
+    }
     ngOnDestroy() {
         this.mealSelectionSubscription.unsubscribe();
     }
@@ -84,7 +92,6 @@ export class MenuComponent implements OnInit {
                 }
             );
         }
-
     }
     commitMenu() {
         // Get the IDs of the meals in the generated menu that are selected
@@ -102,6 +109,7 @@ export class MenuComponent implements OnInit {
                 console.log('Menu committed successfully:', response);
                 // Handle success, if needed (e.g., show a success message)
                 this.menuMeals = [];
+                this.generateButtonLabel = "Hungry? Click here to get your meal!"
             },
             (error) => {
                 console.error('Error committing menu:', error);
@@ -109,7 +117,19 @@ export class MenuComponent implements OnInit {
             }
         );
     }
-
+    fetchAllMenus() {
+        // Call the getAllMenus method from the MenuService
+        this.menuService.getAllMenus().then(
+            (menus: any) => {
+                this.menuList = menus;
+                console.log("All menus:", this.menuList);
+            },
+            (error) => {
+                console.error('Error fetching menus:', error);
+                // Handle error, if needed (e.g., show an error message)
+            }
+        );
+    }
     toggleMealSelection(meal: any) {
         this.sharedService.toggleMealSelection(meal);
         console.log("Item selected from menu:", this.sharedService.getSelectedMeals());

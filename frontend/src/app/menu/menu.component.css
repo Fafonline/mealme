@@ -1,8 +1,41 @@
 /* menu.component.css */
+/* Add this style to add a vertical scrollbar to the menu list container */
+.menu-list {
+  height: 300px;
+  /* Adjust the height as per your requirement */
+  overflow-y: auto;
+}
 
 /* Style for the container div */
 .container {
   text-align: center;
+}
+
+/* Add this style for individual menu items */
+.menu-meal-item {
+  /* Add your styles for each menu item here, e.g., padding, margin, etc. */
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  /* Make sure the container for each menu allows for text wrapping as well */
+  align-items: left;
+}
+
+.detail-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+.detail-button {
+  color: rgb(98, 220, 137);
+}
+
+.detail-button:hover {
+  color: rgb(60, 202, 105);
 }
 
 /* Style for the input button */
@@ -38,9 +71,21 @@
   color: #dd0031;
 }
 
+/* Hover effect for the input button */
+.input-button-commit:hover {
+  background-color: #fff;
+  color: #00dd8c;
+}
+
 /* Active (click) effect for the input button */
 .input-button:active {
   background-color: #dd0031;
+  color: #fff;
+}
+
+/* Active (click) effect for the input button */
+.input-button-commit:active {
+  background-color: #00dd8c;
   color: #fff;
 }
 

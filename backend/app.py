@@ -3,6 +3,7 @@ from couchbase.auth import PasswordAuthenticator
 from couchbase.cluster import Cluster
 from couchbase.options import (ClusterOptions, ClusterTimeoutOptions,
                                QueryOptions)
+
 import secrets
 import uuid
 from couchbase.n1ql import N1QLQuery
@@ -136,6 +137,16 @@ def get_menu_by_id(menu_id):
         return jsonify(menu)
     return jsonify({"error": "Menu not found"}), 404
 
+@app.route("/menus", methods=["GET"])
+def get_menus():
+    # Fetch all menus from the Couchbase bucket
+    query = "SELECT id, name, meals FROM `{}` WHERE META().id LIKE 'menu::%'".format(COUCHBASE_BUCKET)
+    result = cluster.query(query)
+    menus = [row for row in result]
+    
+    # Return the menus as an array of JSON documents in the response
+    return jsonify(menus)
+
 def generate_meal(data):
     chosen_meals_ids = data.get("default_meal_ids", [])
     num_meals_to_generate = data.get("num_meals", 5)
@@ -159,6 +170,30 @@ def generate_meal(data):
             menu_meals.append(meal)
     return menu_meals
 
+def generate_menu_name():
+    # List of positive adjectives
+    positive_adjectives = ["Delicious", "Tasty", "Mouthwatering", "Scrumptious", "Savory", "Appetizing", "Flavorful"]
+
+    # Fetch synonyms of the word "meal"
+    menu_synonyms =  [
+    "food selection",
+    "cuisine list",
+    "fish options",
+    "feal choices",
+    "dining selections",
+    "culinary offerings",
+    "edible array",
+    "gastronomic options",
+    "fare list",
+    "dishes menu"
+]
+    # Combine positive adjectives and synonyms to create possible menu name components
+    possible_components = positive_adjectives + menu_synonyms
+
+    # Generate a random menu name by randomly selecting two components and joining them
+    random_menu_name = " ".join(random.sample(possible_components, 2))
+    return random_menu_name
+
 
 @app.route("/menu/", methods=["POST"])
 def create_menu():
@@ -166,7 +201,7 @@ def create_menu():
     menu_meals = generate_meal(data)
     # Generate a new unique ID for the menu
     menu_unique_id = generate_random_id()
-    menu_data = {"id": menu_unique_id, "meals": menu_meals}
+    menu_data = {"id": menu_unique_id, "meals": menu_meals, "name": generate_menu_name()}
     # Insert the new menu document into Couchbase
     menu_key = COUCHBASE_MENU_PREFIX + menu_unique_id
     collection.upsert(menu_key, menu_data)

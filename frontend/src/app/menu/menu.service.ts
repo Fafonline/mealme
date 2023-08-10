@@ -13,15 +13,15 @@ export class MenuService {
     };
     // return axios.post(`${this.baseUrl}/menu}`, data);
     return axios.options(`${this.baseUrl}/menu/`, { headers })
-      .then((response) => {
+      .then((response: { data: any; }) => {
         // Pre-flight request succeeded, send the actual POST request with the data
         return axios.post(`${this.baseUrl}/menu/`, data, { headers });
       })
-      .then((response) => {
+      .then((response: { data: any; }) => {
         // Actual POST request succeeded, return the response data
         return response.data;
       })
-      .catch((error) => {
+      .catch((error: { data: any; }) => {
         // Handle any errors
         throw error;
       });
@@ -32,15 +32,15 @@ export class MenuService {
     };
     // return axios.post(`${this.baseUrl}/menu}`, data);
     return axios.options(`${this.baseUrl}/menu/`, { headers })
-      .then((response) => {
+      .then((response: { data: any; }) => {
         // Pre-flight request succeeded, send the actual POST request with the data
         return axios.patch(`${this.baseUrl}/menu/${mealId}`, data, { headers });
       })
-      .then((response) => {
+      .then((response: { data: any; }) => {
         // Actual POST request succeeded, return the response data
         return response.data;
       })
-      .catch((error) => {
+      .catch((error: { data: any; }) => {
         // Handle any errors
         throw error;
       });
@@ -51,18 +51,33 @@ export class MenuService {
     };
     // return axios.post(`${this.baseUrl}/menu}`, data);
     return axios.options(`${this.baseUrl}/menu/`, { headers })
-      .then((response) => {
+      .then((response: { data: any; }) => {
         // Pre-flight request succeeded, send the actual POST request with the data
         return axios.post(`${this.baseUrl}/menu/`, data, { headers });
       })
-      .then((response) => {
+      .then((response: { data: any; }) => {
         // Actual POST request succeeded, return the response data
+        return response.data;
+      })
+      .catch((error: { data: any; }) => {
+        // Handle any errors
+        throw error;
+      });
+
+  }
+  getAllMenus() {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    return axios.get(`${this.baseUrl}/menus`, { headers })
+      .then((response) => {
+        // Request succeeded, return the response data
         return response.data;
       })
       .catch((error) => {
         // Handle any errors
         throw error;
       });
-
   }
 }

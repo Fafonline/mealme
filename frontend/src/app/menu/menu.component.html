@@ -1,3 +1,17 @@
+<h2>Menu List</h2>
+<div class="menu-list">
+    <div *ngFor="let menu of menuList" class="menu-meal-item">
+        <span>
+            <label [for]="menu.name"><b>{{ menu.name }}</b>({{ menu.meals.length }} meals, Menu ID: {{ menu.id
+                }})</label>
+        </span>
+        <span>
+            <button class="edit-button" (click)="viewMenuDetails(menu.id)">
+                <i class="fa-solid fa-eye"></i>
+            </button>
+        </span>
+    </div>
+</div>
 <h2>Create New Menu</h2>
 <label>Number of meals:</label>
 <input class="text-input" type="number" id="numMeals" [(ngModel)]="numMeals" />
@@ -11,7 +25,7 @@
 </ul> -->
 
 <div class="meal-list">
-    <div *ngFor="let meal of menuMeals" class="meal-item">
+    <div *ngFor="let meal of menuMeals" class="menu-meal-item">
         <input type="checkbox" [(ngModel)]="mealSelection[meal.id]" (change)="toggleMealSelection(meal)" />
         <label [for]="meal.name">{{ meal.name }}</label>
     </div>

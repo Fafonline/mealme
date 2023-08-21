@@ -3,9 +3,9 @@
 export class Menu {
     id: string;
     name: string;
-    meals: string[];
+    meals: Menu[];
 
-    constructor(id: string, name: string, meals: string[]) {
+    constructor(id: string, name: string, meals: Menu[]) {
         this.id = id;
         this.name = name;
         this.meals = meals;

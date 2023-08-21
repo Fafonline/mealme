@@ -33,10 +33,6 @@ export class MenuComponent implements OnInit {
             }
         );
     }
-    viewMenuDetails(menuId: string) {
-        // Navigate to a separate component or route to show detailed menu view
-        console.log("Display menu detail:", menuId);
-    }
     ngOnDestroy() {
         this.mealSelectionSubscription.unsubscribe();
     }
@@ -133,5 +129,8 @@ export class MenuComponent implements OnInit {
     toggleMealSelection(meal: any) {
         this.sharedService.toggleMealSelection(meal);
         console.log("Item selected from menu:", this.sharedService.getSelectedMeals());
+    }
+    viewMenuDetails(menu: any) {
+        this.sharedService.showMenuPopup(menu)
     }
 }

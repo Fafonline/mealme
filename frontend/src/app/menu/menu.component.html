@@ -6,7 +6,7 @@
                 }})</label>
         </span>
         <span>
-            <button class="edit-button" (click)="viewMenuDetails(menu.id)">
+            <button class="edit-button" (click)="viewMenuDetails(menu)">
                 <i class="fa-solid fa-eye"></i>
             </button>
         </span>
@@ -19,10 +19,6 @@
 <button class="input-button" (click)="createNewMenu()">{{generateButtonLabel}}</button>
 <!-- Button to trigger commit_menu -->
 <button class="input-button-commit" *ngIf="menuMeals.length > 0" (click)="commitMenu()">Can't wait, I'm in!</button>
-<!-- Display the list of meal names in the menu -->
-<!-- <ul>
-    <li *ngFor="let meal of menuMeals">{{ meal.name }}</li>
-</ul> -->
 
 <div class="meal-list">
     <div *ngFor="let meal of menuMeals" class="menu-meal-item">
@@ -30,3 +26,5 @@
         <label [for]="meal.name">{{ meal.name }}</label>
     </div>
 </div>
+
+<app-menu-modal></app-menu-modal>

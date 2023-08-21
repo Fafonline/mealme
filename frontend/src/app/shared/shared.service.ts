@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Meal } from "../meal/meal.model"
+import { Menu } from "../menu/menu.model"
 @Injectable({
     providedIn: 'root',
 })
@@ -11,8 +12,14 @@ export class SharedService {
     private showEditModelSubject = new BehaviorSubject<boolean>(false);
     showEditModel$: Observable<boolean> = this.showEditModelSubject.asObservable();
 
+    private showMenuModelSubject = new BehaviorSubject<boolean>(false);
+    showMenuModel$: Observable<boolean> = this.showMenuModelSubject.asObservable();
+
     private mealToEditSubject = new BehaviorSubject<Meal>(new Meal('', '', ''));
     mealToEdit$: Observable<Meal> = this.mealToEditSubject.asObservable();
+
+    private menuToShowSubject = new BehaviorSubject<Menu>(new Menu('', '', []));
+    menuToShow$: Observable<Menu> = this.menuToShowSubject.asObservable();
 
     getMealSelection(): { [key: string]: boolean } {
         return this.mealSelectionSubject.getValue();
@@ -32,5 +39,9 @@ export class SharedService {
         console.log("Update showEditModelSubject")
         this.showEditModelSubject.next(true);
         this.mealToEditSubject.next(meal);
+    }
+    showMenuPopup(menu: Menu) {
+        this.showMenuModelSubject.next(true);
+        this.menuToShowSubject.next(menu);
     }
 }

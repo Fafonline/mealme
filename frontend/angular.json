@@ -28,8 +28,7 @@
               "src/styles.css",
               "src/app/menu/menu.component.css",
               "src/app/meal/meals.component.css",
-              "src/app/meal-modal/meal-modal.component.css",
-              "src/app/menu-modal/menu-modal.component.css"
+              "src/app/meal-modal/meal-modal.component.css"
             ],
             "scripts": []
           },

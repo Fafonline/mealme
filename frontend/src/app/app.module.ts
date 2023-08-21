@@ -7,11 +7,10 @@ import { MealsComponent } from './meal/meals.component';
 import { MenuComponent } from './menu/menu.component';
 import { FormsModule } from '@angular/forms';
 import { MealModalComponent } from './meal-modal/meal-modal.component';
-import { MenuModalComponent } from './menu-modal/menu-modal.component';
 
 @NgModule({
   declarations: [
-    AppComponent, MealsComponent, MenuComponent, MealModalComponent, MenuModalComponent
+    AppComponent, MealsComponent, MenuComponent, MealModalComponent
   ],
   imports: [
     BrowserModule,

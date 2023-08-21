@@ -21,6 +21,10 @@
   align-items: left;
 }
 
+.menu-meal-item:hover {
+  background-color: #d2e6ff
+}
+
 .detail-button {
   background-color: transparent;
   border: none;
@@ -110,4 +114,21 @@
   outline: none;
   border-color: #dd0031;
   box-shadow: 0 0 5px rgba(221, 0, 49, 0.5);
+}
+
+.menu-dropdown {
+  background-color: rgb(245, 245, 245);
+}
+
+.menu-dropdown-item {
+  background-color: rgb(255, 250, 240);
+  /* Add your styles for each meal item here, e.g., padding, margin, etc. */
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  /* Make sure the container for each meal allows for text wrapping as well */
+  white-space: normal;
+  display: flex;
+  justify-content: space-between;
+  align-items: left;
 }

@@ -3,6 +3,7 @@
     "python.analysis.extraPaths": [
         "C:\\Users\\Public\\Programs\\tts4\\lib"
     ],
+    "peacock.color": "#dd0531",
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#fa1b49",
         "activityBar.background": "#fa1b49",
@@ -21,6 +22,5 @@
         "titleBar.activeForeground": "#e7e7e7",
         "titleBar.inactiveBackground": "#dd053199",
         "titleBar.inactiveForeground": "#e7e7e799"
-    },
-    "peacock.color": "#dd0531"
+    }
 }

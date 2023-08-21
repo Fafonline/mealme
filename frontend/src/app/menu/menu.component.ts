@@ -133,4 +133,7 @@ export class MenuComponent implements OnInit {
     viewMenuDetails(menu: any) {
         this.sharedService.showMenuPopup(menu)
     }
+    toggleDropDown(menu: any) {
+        menu.show = !menu.show;
+    }
 }

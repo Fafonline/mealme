@@ -1,15 +1,19 @@
 <h2>Menu List</h2>
 <div class="menu-list">
-    <div *ngFor="let menu of menuList" class="menu-meal-item">
+    <div *ngFor="let menu of menuList" class="menu-meal-item" (click)="toggleDropDown(menu)">
         <span>
-            <label [for]="menu.name"><b>{{ menu.name }}</b>({{ menu.meals.length }} meals, Menu ID: {{ menu.id
+            <!-- <label [for]="menu.name" (click)="toggleDropDown(menu)"><b>{{ menu.name }}</b>({{ menu.meals.length }} -->
+            <label [for]="menu.name"><b>{{ menu.name }}</b>({{ menu.meals.length }}
+                meals, Menu ID: {{ menu.id
                 }})</label>
         </span>
-        <span>
-            <button class="edit-button" (click)="viewMenuDetails(menu)">
-                <i class="fa-solid fa-eye"></i>
-            </button>
-        </span>
+        <div class="dropdown-panel" *ngIf="menu.show">
+            <div class="menu-dropdown">
+                <div *ngFor="let meal of menu.meals" class="menu-dropdown-item">
+                    <label [for]="meal.name">{{ meal.name }}</label>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <h2>Create New Menu</h2>

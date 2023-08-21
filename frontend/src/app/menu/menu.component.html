@@ -2,10 +2,7 @@
 <div class="menu-list">
     <div *ngFor="let menu of menuList" class="menu-meal-item" (click)="toggleDropDown(menu)">
         <span>
-            <!-- <label [for]="menu.name" (click)="toggleDropDown(menu)"><b>{{ menu.name }}</b>({{ menu.meals.length }} -->
-            <label [for]="menu.name"><b>{{ menu.name }}</b>({{ menu.meals.length }}
-                meals, Menu ID: {{ menu.id
-                }})</label>
+            <label [for]="menu.name"><b>{{ menu.name }}</b>({{ menu.meals.length }} meals)</label>
         </span>
         <div class="dropdown-panel" *ngIf="menu.show">
             <div class="menu-dropdown">

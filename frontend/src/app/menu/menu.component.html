@@ -1,19 +1,7 @@
-<h2>Menu List</h2>
-<div class="menu-list">
-    <div *ngFor="let menu of menuList" class="menu-meal-item" (click)="toggleDropDown(menu)">
-        <span>
-            <label [for]="menu.name"><b>{{ menu.name }}</b>({{ menu.meals.length }} meals)</label>
-        </span>
-        <div class="dropdown-panel" *ngIf="menu.show">
-            <div class="menu-dropdown">
-                <div *ngFor="let meal of menu.meals" class="menu-dropdown-item">
-                    <label [for]="meal.name">{{ meal.name }}</label>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <h2>Create New Menu</h2>
+<p>
+    <a routerLink="/menus">(See existing menus)</a>
+</p>
 <label>Number of meals:</label>
 <input class="text-input" type="number" id="numMeals" [(ngModel)]="numMeals" />
 <br>

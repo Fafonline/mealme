@@ -14,7 +14,6 @@ import { Menu } from './menu.model'
 export class MenuComponent implements OnInit {
     menuMeals: Meal[] = [];
     menuId: undefined;
-    menuList: Menu[] = [];
     generateButtonLabel = "Hungry? Click here to get your meal!";
     numMeals: number = 5; // Default value for the number of meals to generate
     mealSelection: { [key: string]: boolean } = {};
@@ -23,8 +22,6 @@ export class MenuComponent implements OnInit {
     constructor(private menuService: MenuService, private sharedService: SharedService) { }
 
     ngOnInit() {
-        // Fetch all menus when the component initializes
-        this.fetchAllMenus();
         this.mealSelectionSubscription = this.sharedService.mealSelection$.subscribe(
             (selection) => {
                 console.log("!!!Menu callback:", selection);
@@ -113,27 +110,8 @@ export class MenuComponent implements OnInit {
             }
         );
     }
-    fetchAllMenus() {
-        // Call the getAllMenus method from the MenuService
-        this.menuService.getAllMenus().then(
-            (menus: any) => {
-                this.menuList = menus;
-                console.log("All menus:", this.menuList);
-            },
-            (error) => {
-                console.error('Error fetching menus:', error);
-                // Handle error, if needed (e.g., show an error message)
-            }
-        );
-    }
     toggleMealSelection(meal: any) {
         this.sharedService.toggleMealSelection(meal);
         console.log("Item selected from menu:", this.sharedService.getSelectedMeals());
-    }
-    viewMenuDetails(menu: any) {
-        this.sharedService.showMenuPopup(menu)
-    }
-    toggleDropDown(menu: any) {
-        menu.show = !menu.show;
     }
 }

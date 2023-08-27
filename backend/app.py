@@ -140,7 +140,7 @@ def get_menu_by_id(menu_id):
 @app.route("/menus", methods=["GET"])
 def get_menus():
     # Fetch all menus from the Couchbase bucket
-    query = "SELECT id, name, meals FROM `{}` WHERE META().id LIKE 'menu::%'".format(COUCHBASE_BUCKET)
+    query = "SELECT id, name, meals FROM `{}` WHERE META().id LIKE 'menu::%' ORDER BY generation_date".format(COUCHBASE_BUCKET)
     result = cluster.query(query)
     menus = [row for row in result]
     
@@ -258,36 +258,25 @@ def select_meals(meals_scores, num_meals_to_generate, default_meals):
         meals_scores.pop(meal_id)
     return selected_meals_ids
 
-@app.route("/menu/commit", methods=["POST"])
+# @app.route("/commit/<menu_id>", methods=["POST"])
+# def commit_menu(menu_id):
+@app.route("/commit/", methods=["POST"])
 def commit_menu():
-    data = request.get_json()
-    meal_ids = data.get("meal_ids", [])
-
-    # Generate a unique ID for the menu
-    menu_unique_id = generate_random_id()
-
-    # Create a new menu document with the list of meal IDs and the generation date
-    menu_data = {
-        "id": menu_unique_id,
-        "meals": meal_ids,
-        "generation_date": datetime.now().isoformat()
-    }
-
-    # Fetch the corresponding meals for each meal ID and update the preparation_count
-    for meal_id in meal_ids:
-        meal_key = COUCHBASE_MEAL_PREFIX + meal_id
-        meal = collection.get(meal_key).value
-        if meal:
-            meal["preparation_count"] = meal.get("preparation_count", 0) + 1
-            meal["last_commit_date"] = datetime.now().isoformat()
-            collection.upsert(meal_key, meal)
-
-
-    # Insert the new menu document into Couchbase
-    menu_key = COUCHBASE_MENU_PREFIX + menu_unique_id
-    collection.upsert(menu_key, menu_data)
-
-    return jsonify(menu_data), 201
+    # menu_key = COUCHBASE_MENU_PREFIX + menu_id
+    menu_key = COUCHBASE_MENU_PREFIX + "QD0OLMKE"
+    menu = collection.get(menu_key).value
+    if menu:
+        # Fetch the corresponding meals for each meal ID and update the preparation_count
+        for meal_id in menu["meals"]:
+            meal_key = COUCHBASE_MEAL_PREFIX + meal_id["id"]
+            meal = collection.get(meal_key).value
+            if meal:
+                meal["preparation_count"] = meal.get("preparation_count", 0) + 1
+                meal["last_commit_date"] = datetime.now().isoformat()
+                collection.upsert(meal_key, meal)
+        # Insert the new menu document into Couchbase
+        return jsonify(menu),201
+    return jsonify({"error": "Menu not found"}), 404
 
 @app.route("/meal/<meal_id>", methods=["DELETE"])
 def delete_meal(meal_id):

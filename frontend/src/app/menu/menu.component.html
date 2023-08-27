@@ -1,9 +1,10 @@
 <h2>Create New Menu</h2>
-<p>
-    <a routerLink="/menus">(See existing menus)</a>
-</p>
-<label>Number of meals:</label>
-<input class="text-input" type="number" id="numMeals" [(ngModel)]="numMeals" />
+<select class="select" [(ngModel)]="selectedDuration">
+    <option value="weekend">Week-end</option>
+    <option value="week">Week</option>
+    <option value="twoWeeks">Two Weeks</option>
+    <option value="month">Month</option>
+</select>
 <br>
 <button class="input-button" (click)="createNewMenu()">{{generateButtonLabel}}</button>
 <!-- Button to trigger commit_menu -->

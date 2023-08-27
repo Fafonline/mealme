@@ -132,3 +132,29 @@
   justify-content: space-between;
   align-items: left;
 }
+
+/* Add styles to the select element */
+select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  width: 100%;
+}
+
+/* Style the select arrow */
+select::after {
+  content: '\25BE'; /* Unicode down arrow character */
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+}
+
+/* Apply focus styles */
+select:focus {
+  outline: none;
+  border-color: #6cb2eb;
+  box-shadow: 0 0 5px rgba(108, 178, 235, 0.5);
+}

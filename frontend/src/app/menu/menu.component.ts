@@ -18,6 +18,8 @@ export class MenuComponent implements OnInit {
     numMeals: number = 5; // Default value for the number of meals to generate
     mealSelection: { [key: string]: boolean } = {};
     private mealSelectionSubscription!: Subscription;
+    selectedDuration: string = 'week'; // Default selected duration
+
 
     constructor(private menuService: MenuService, private sharedService: SharedService) { }
 
@@ -29,6 +31,20 @@ export class MenuComponent implements OnInit {
                 this.mealSelection = selection;
             }
         );
+    }
+    computeNumberOfMeals(): number {
+        switch (this.selectedDuration) {
+            case 'weekend':
+                return 2; // 2 meals for weekend
+            case 'week':
+                return 7; // 1 meal per working day
+            case 'twoWeeks':
+                return 14; // 2 weeks * 5 working days
+            case 'month':
+                return 28; // 4 weeks * 5 working days
+            default:
+                return 0;
+        }
     }
     ngOnDestroy() {
         this.mealSelectionSubscription.unsubscribe();
@@ -55,8 +71,9 @@ export class MenuComponent implements OnInit {
     }
     // Method to handle the button click event
     createNewMenu() {
+        const numMeals = this.computeNumberOfMeals();
         const menuData = {
-            num_meals: this.numMeals, // Example number of meals to generate,
+            num_meals: numMeals, // Example number of meals to generate,
             "default_meal_ids": this.sharedService.getSelectedMeals()
         };
         console.log("Menu Data:", menuData);
@@ -91,13 +108,9 @@ export class MenuComponent implements OnInit {
         const selectedMealsIds = this.menuMeals
             .map((meal) => meal.id);
 
-        console.log("Commit menu wit ids:", selectedMealsIds);
-
-        const data = {
-            meal_ids: selectedMealsIds
-        };
+        console.log("Commit menu ", this.menuId);
         // Call the commit_menu service with the selected meal IDs
-        this.menuService.commitMenu(data).then(
+        this.menuService.commitMenu(String(this.menuId)).then(
             (response) => {
                 console.log('Menu committed successfully:', response);
                 // Handle success, if needed (e.g., show a success message)

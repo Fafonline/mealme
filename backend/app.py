@@ -11,7 +11,10 @@ import time
 from datetime import datetime
 import random
 
+
 app = Flask(__name__)
+# CORS(app, resources={r"/commit/*": {"origins": "*"}})
+
 
 def add_cors_headers(response):
     # Replace "http://localhost:80" with the actual URL of your Angular application
@@ -140,7 +143,7 @@ def get_menu_by_id(menu_id):
 @app.route("/menus", methods=["GET"])
 def get_menus():
     # Fetch all menus from the Couchbase bucket
-    query = "SELECT id, name, meals FROM `{}` WHERE META().id LIKE 'menu::%' ORDER BY generation_date".format(COUCHBASE_BUCKET)
+    query = "SELECT id, name, meals FROM `{}` WHERE META().id LIKE 'menu::%' AND status=\"Committed\" ORDER BY generation_date".format(COUCHBASE_BUCKET)
     result = cluster.query(query)
     menus = [row for row in result]
     
@@ -201,7 +204,7 @@ def create_menu():
     menu_meals = generate_meal(data)
     # Generate a new unique ID for the menu
     menu_unique_id = generate_random_id()
-    menu_data = {"id": menu_unique_id, "meals": menu_meals, "name": generate_menu_name()}
+    menu_data = {"id": menu_unique_id, "meals": menu_meals, "name": generate_menu_name(), "status": "Pending"}
     # Insert the new menu document into Couchbase
     menu_key = COUCHBASE_MENU_PREFIX + menu_unique_id
     collection.upsert(menu_key, menu_data)
@@ -258,12 +261,11 @@ def select_meals(meals_scores, num_meals_to_generate, default_meals):
         meals_scores.pop(meal_id)
     return selected_meals_ids
 
-# @app.route("/commit/<menu_id>", methods=["POST"])
-# def commit_menu(menu_id):
-@app.route("/commit/", methods=["POST"])
-def commit_menu():
-    # menu_key = COUCHBASE_MENU_PREFIX + menu_id
-    menu_key = COUCHBASE_MENU_PREFIX + "QD0OLMKE"
+@app.route("/commit/<menu_id>", methods=["POST"])
+def commit_menu(menu_id):
+# @app.route("/commit/", methods=["POST"])
+# def commit_menu():
+    menu_key = COUCHBASE_MENU_PREFIX + menu_id
     menu = collection.get(menu_key).value
     if menu:
         # Fetch the corresponding meals for each meal ID and update the preparation_count
@@ -274,7 +276,9 @@ def commit_menu():
                 meal["preparation_count"] = meal.get("preparation_count", 0) + 1
                 meal["last_commit_date"] = datetime.now().isoformat()
                 collection.upsert(meal_key, meal)
+            menu["status"] = "Committed"
         # Insert the new menu document into Couchbase
+        collection.upsert(menu_key, menu)
         return jsonify(menu),201
     return jsonify({"error": "Menu not found"}), 404
 

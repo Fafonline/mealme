@@ -116,6 +116,7 @@ export class MenuComponent implements OnInit {
                 // Handle success, if needed (e.g., show a success message)
                 this.menuMeals = [];
                 this.generateButtonLabel = "Hungry? Click here to get your meal!"
+                this.menuId = undefined
             },
             (error) => {
                 console.error('Error committing menu:', error);

@@ -48,10 +48,10 @@ export class MenuService {
     const headers = {
       'Content-Type': 'application/json'
     };
-    return axios.options(`${this.baseUrl}/commit/`, { headers })
+    return axios.options(`${this.baseUrl}/commit/${menuId}`, { headers })
       .then((response: { data: any; }) => {
         // Pre-flight request succeeded, send the actual POST request with the data
-        return axios.post(`${this.baseUrl}/commit/`, {}, { headers });
+        return axios.post(`${this.baseUrl}/commit/${menuId}`, {}, { headers });
       })
       .then((response: { data: any; }) => {
         // Actual POST request succeeded, return the response data

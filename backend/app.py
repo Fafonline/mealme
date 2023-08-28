@@ -143,7 +143,7 @@ def get_menu_by_id(menu_id):
 @app.route("/menus", methods=["GET"])
 def get_menus():
     # Fetch all menus from the Couchbase bucket
-    query = "SELECT id, name, meals FROM `{}` WHERE META().id LIKE 'menu::%' AND status=\"Committed\" ORDER BY generation_date".format(COUCHBASE_BUCKET)
+    query = "SELECT id, name, meals,generation_date FROM `{}` WHERE META().id LIKE 'menu::%' AND status=\"Committed\" ORDER BY generation_date DESC".format(COUCHBASE_BUCKET)
     result = cluster.query(query)
     menus = [row for row in result]
     
@@ -263,8 +263,7 @@ def select_meals(meals_scores, num_meals_to_generate, default_meals):
 
 @app.route("/commit/<menu_id>", methods=["POST"])
 def commit_menu(menu_id):
-# @app.route("/commit/", methods=["POST"])
-# def commit_menu():
+    commit_date = datetime.now().strftime("%Y-%m-%d")
     menu_key = COUCHBASE_MENU_PREFIX + menu_id
     menu = collection.get(menu_key).value
     if menu:
@@ -274,9 +273,10 @@ def commit_menu(menu_id):
             meal = collection.get(meal_key).value
             if meal:
                 meal["preparation_count"] = meal.get("preparation_count", 0) + 1
-                meal["last_commit_date"] = datetime.now().isoformat()
+                meal["last_commit_date"] = commit_date
                 collection.upsert(meal_key, meal)
             menu["status"] = "Committed"
+            menu["generation_date"] = commit_date
         # Insert the new menu document into Couchbase
         collection.upsert(menu_key, menu)
         return jsonify(menu),201

@@ -4,6 +4,7 @@
   height: 300px;
   /* Adjust the height as per your requirement */
   overflow-y: auto;
+  border-radius: 10px;
 }
 
 /* Style for the container div */
@@ -16,6 +17,7 @@
   /* Add your styles for each menu item here, e.g., padding, margin, etc. */
   padding: 10px;
   border: 1px solid #ccc;
+  border-radius: 10px;
   margin-bottom: 10px;
   /* Make sure the container for each menu allows for text wrapping as well */
   align-items: left;
@@ -145,7 +147,8 @@ select {
 
 /* Style the select arrow */
 select::after {
-  content: '\25BE'; /* Unicode down arrow character */
+  content: '\25BE';
+  /* Unicode down arrow character */
   position: absolute;
   top: 50%;
   right: 10px;

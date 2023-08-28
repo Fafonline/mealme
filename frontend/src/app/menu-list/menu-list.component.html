@@ -3,6 +3,7 @@
         <span>
             <label [for]="menu.name"><b>{{ menu.name }}</b>({{ menu.meals.length }} meals)</label>
         </span>
+        <BR>
         <span><i>{{menu.generation_date}}</i></span>
         <div class="dropdown-panel" *ngIf="menu.show">
             <div class="menu-dropdown">

@@ -3,6 +3,7 @@
   height: 300px;
   /* Adjust the height as per your requirement */
   overflow-y: auto;
+  border-radius: 10px;
 }
 
 /* Add this style for individual meal items */
@@ -10,6 +11,7 @@
   /* Add your styles for each meal item here, e.g., padding, margin, etc. */
   padding: 10px;
   border: 1px solid #ccc;
+  border-radius: 10px;
   margin-bottom: 10px;
   /* Make sure the container for each meal allows for text wrapping as well */
   white-space: normal;

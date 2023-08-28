@@ -21,6 +21,9 @@ export class SharedService {
     private menuToShowSubject = new BehaviorSubject<Menu>(new Menu('', '', []));
     menuToShow$: Observable<Menu> = this.menuToShowSubject.asObservable();
 
+    private eventSubject = new BehaviorSubject<string>("");
+    event$: Observable<string> = this.eventSubject.asObservable();
+
     getMealSelection(): { [key: string]: boolean } {
         return this.mealSelectionSubject.getValue();
     }
@@ -44,4 +47,9 @@ export class SharedService {
         this.showMenuModelSubject.next(true);
         this.menuToShowSubject.next(menu);
     }
+
+    sendEvent(event: string) {
+        this.eventSubject.next(event)
+    }
+
 }

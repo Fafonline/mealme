@@ -117,6 +117,7 @@ export class MenuComponent implements OnInit {
                 this.menuMeals = [];
                 this.generateButtonLabel = "Hungry? Click here to get your meal!"
                 this.menuId = undefined
+                this.sharedService.sendEvent("UpdateMenuList")
             },
             (error) => {
                 console.error('Error committing menu:', error);

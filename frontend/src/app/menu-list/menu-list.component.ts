@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Menu } from '../menu/menu.model'
 import { MenuService } from '../menu/menu.service';
+import { Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
 
 
 @Component({
@@ -11,11 +13,19 @@ import { MenuService } from '../menu/menu.service';
 export class MenuListComponent implements OnInit {
   menuList: Menu[] = [];
 
-  constructor(private menuService: MenuService) { };
+  constructor(private menuService: MenuService, private sharedService: SharedService) { };
+  private eventSubscription!: Subscription;
 
   ngOnInit() {
     // Fetch all menus when the component initializes
     this.fetchAllMenus();
+    this.eventSubscription = this.sharedService.event$.subscribe(
+      (event) => {
+        if (event === "UpdateMenuList") {
+          this.fetchAllMenus();
+        }
+      }
+    );
   }
   fetchAllMenus() {
     // Call the getAllMenus method from the MenuService

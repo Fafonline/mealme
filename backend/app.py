@@ -194,7 +194,9 @@ def generate_menu_name():
     possible_components = positive_adjectives + menu_synonyms
 
     # Generate a random menu name by randomly selecting two components and joining them
-    random_menu_name = " ".join(random.sample(possible_components, 2))
+    menu_adjective = random.choice(positive_adjectives)
+    menu_synonyms = random.choice(menu_synonyms)
+    random_menu_name = menu_adjective+" "+ menu_synonyms
     return random_menu_name
 
 
@@ -256,14 +258,15 @@ def select_meals(meals_scores, num_meals_to_generate, default_meals):
         probabilities = {meal_id: score / total_score for meal_id, score in meals_scores.items()}
         # Choose a meal ID based on the probabilities
         meal_id = random.choices(list(meals_scores.keys()), weights=list(probabilities.values()))[0]
-        selected_meals_ids.append(meal_id)
+        if meal_id not in selected_meals_ids:
+            selected_meals_ids.append(meal_id)
         # Remove the selected meal from the scores dictionary to avoid selecting it again
         meals_scores.pop(meal_id)
     return selected_meals_ids
 
 @app.route("/commit/<menu_id>", methods=["POST"])
 def commit_menu(menu_id):
-    commit_date = datetime.now().strftime("%Y-%m-%d")
+    commit_date = datetime.now().isoformat()
     menu_key = COUCHBASE_MENU_PREFIX + menu_id
     menu = collection.get(menu_key).value
     if menu:

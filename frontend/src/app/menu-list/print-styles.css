@@ -1,0 +1,55 @@
+/* menu.component.css */
+/* Add this style to add a vertical scrollbar to the menu list container */
+.menu-list {
+    height: 500px;
+    /* Adjust the height as per your requirement */
+    overflow-y: auto;
+}
+
+/* Add this style for individual menu items */
+.menu-meal-item {
+    /* Add your styles for each menu item here, e.g., padding, margin, etc. */
+    padding: 10px;
+    border: 1px solid #ccc;
+
+    margin-bottom: 10px;
+    /* Make sure the container for each menu allows for text wrapping as well */
+    align-items: left;
+}
+
+.menu-meal-item:hover {
+    background-color: #d2e6ff
+}
+
+.menu-dropdown {
+    background-color: rgb(245, 245, 245);
+    border-radius: 10px;
+}
+
+.menu-dropdown-item {
+    background-color: rgb(255, 250, 240);
+    /* Add your styles for each meal item here, e.g., padding, margin, etc. */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    /* Make sure the container for each meal allows for text wrapping as well */
+    white-space: normal;
+    display: flex;
+    justify-content: space-between;
+    align-items: left;
+}
+
+.print-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 16px;
+    outline: none;
+    color: rgb(102, 153, 225);
+}
+
+.print-button:hover {
+    color: rgb(75, 112, 164);
+}

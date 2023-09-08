@@ -26,6 +26,7 @@
             ],
             "styles": [
               "src/styles.css",
+              "src/app/styles/print-styles.css",
               "src/app/menu/menu.component.css",
               "src/app/meal/meals.component.css",
               "src/app/meal-modal/meal-modal.component.css"

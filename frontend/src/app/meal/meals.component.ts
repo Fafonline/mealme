@@ -3,11 +3,13 @@ import { MealService } from './meal.service';
 import { Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { Meal } from './meal.model'
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-meals',
     templateUrl: './meals.component.html'
 })
+
 export class MealsComponent implements OnInit {
     meals: Meal[] = [];
     markdownInput: string = '';
@@ -15,11 +17,12 @@ export class MealsComponent implements OnInit {
     private mealSelectionSubscription!: Subscription;
     constructor(private mealService: MealService, private sharedService: SharedService) { }
     selectedMeal: Meal = { "id": "", "description": "", "name": "" };
-
-
+    searchTerm: string = '';
+    filteredMeals: Meal[] = [];
 
     ngOnInit() {
         this.getMeals();
+        this.filteredMeals = this.meals; // Initialize filteredMeals with all meals
         this.mealSelectionSubscription = this.sharedService.mealSelection$.subscribe(
             (selection) => {
                 console.log("!!!Meals callback:", selection);
@@ -27,11 +30,29 @@ export class MealsComponent implements OnInit {
                 this.mealSelection = selection;
             }
         );
+        console.log("Meals:", this.meals)
+        console.log("Filtered meals:", this.filteredMeals)
     }
+    // Add a method to update filteredMeals based on searchTerm
 
+    updateFilteredMeals() {
+        // Split the search term into words
+        const searchWords = this.searchTerm.toLowerCase().split(' ');
+
+        // Filter meals based on search words
+        this.filteredMeals = this.meals.filter((meal) => {
+            // Check if any of the search words is found in the meal name
+            return searchWords.some((word) =>
+                meal.name.toLowerCase().includes(word)
+            );
+        });
+    }
     getMeals() {
         this.mealService.getMeals().then((response) => {
             this.meals = response.data;
+            console.log("Get meals:", this.meals)
+            this.updateFilteredMeals();
+            console.log("Filtered meals:", this.filteredMeals)
         });
     }
 
@@ -47,6 +68,8 @@ export class MealsComponent implements OnInit {
                     console.log('Meals Imported successfully:', response);
                     // Refresh the meals list
                     this.getMeals();
+                    this.updateFilteredMeals();
+                    this.markdownInput = "Enter meals in markdown format"
                 },
                 (error) => {
                     console.error('Error creating meal:', error);

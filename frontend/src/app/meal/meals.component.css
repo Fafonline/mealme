@@ -46,3 +46,20 @@
 .edit-button:hover {
   color: rgb(75, 112, 164);
 }
+
+.create-box,
+.search-box {
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  width: 200px;
+  /* Adjust the width as needed */
+  transition: border-color 0.3s ease-in-out;
+}
+
+.create-box:focus,
+.search-box:focus {
+  outline: none;
+  border-color: #007bff;
+  /* Change the border color on focus */
+}

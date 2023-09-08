@@ -1,7 +1,7 @@
 /* menu.component.css */
 /* Add this style to add a vertical scrollbar to the menu list container */
 .menu-list {
-  height: 300px;
+  height: 500px;
   /* Adjust the height as per your requirement */
   overflow-y: auto;
 }
@@ -38,4 +38,18 @@
   display: flex;
   justify-content: space-between;
   align-items: left;
+}
+
+.print-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 16px;
+  outline: none;
+  color: rgb(102, 153, 225);
+}
+
+.print-button:hover {
+  color: rgb(75, 112, 164);
 }

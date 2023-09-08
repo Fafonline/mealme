@@ -43,4 +43,24 @@ export class MenuListComponent implements OnInit {
   toggleDropDown(menu: any) {
     menu.show = !menu.show;
   }
+  printMenu(menu: any) {
+    const printableContent = document.getElementById('printable-menu-item')?.innerHTML;
+
+    if (printableContent) {
+      const printWindow = window.open('', '_blank');
+      printWindow?.document.write(`
+        <html>
+          <head>
+            <title>${menu.name}</title>
+            <link rel="stylesheet" type="text/css" href="../styles/print-styles.css" media="print">
+          </head>
+          <body>
+            ${printableContent}
+          </body>
+        </html>
+      `);
+      printWindow?.document.close();
+      printWindow?.print();
+    }
+  }
 }

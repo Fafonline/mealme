@@ -1,0 +1,35 @@
+/* CSS */
+.login-container {
+    display: flex;
+    justify-content: flex-end;
+    /* Align children to the right */
+    padding-right: 20px;
+    /* Add padding on the right side */
+}
+
+.login,
+.logout {
+    display: flex;
+    /* Enable flex layout for children */
+    align-items: center;
+    /* Vertically center the content within each span */
+}
+
+.login a,
+.logout a {
+    margin-right: 10px;
+    /* Add spacing between the link and icon */
+    color: white;
+    /* Set the default text color to white */
+    text-decoration: none;
+    /* Remove underlines from the link */
+    transition: color 0.3s;
+    /* Smooth color transition */
+}
+
+
+.login a:hover,
+.logout a:hover {
+    color: red;
+    /* Change the text color to red on hover */
+}

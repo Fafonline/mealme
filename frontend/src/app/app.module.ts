@@ -8,16 +8,28 @@ import { MenuComponent } from './menu/menu.component';
 import { FormsModule } from '@angular/forms';
 import { MealModalComponent } from './meal-modal/meal-modal.component';
 import { MenuListComponent } from './menu-list/menu-list.component';
+import { LoginComponent } from './login/login.component';
+import { RouterModule, Routes } from '@angular/router';
+import { AuthenticationComponent } from './authentication/authentication.component';
+import { LogoutComponent } from './logout/logout.component';
+
+const routes: Routes = [
+  { path: 'login', component: LoginComponent }, // Define a route for the Login component
+  { path: 'logout', component: LogoutComponent }, // Define a route for the Login component
+  // Add other routes here if needed
+];
 
 @NgModule({
   declarations: [
-    AppComponent, MealsComponent, MenuComponent, MealModalComponent, MenuListComponent
+    AppComponent, MealsComponent, MenuComponent, MealModalComponent, MenuListComponent, LoginComponent, AuthenticationComponent, LogoutComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    RouterModule.forRoot(routes)
   ],
+  exports: [RouterModule],
   providers: [],
   bootstrap: [AppComponent]
 })

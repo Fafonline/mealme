@@ -22,8 +22,10 @@ services:
     environment:
       FLASK_DEBUG: 1
       FLASK_APP: ./app.py
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_USER: "guest"
+      DB_PASSWORD: "password"
+      # DB_USER: ${DB_USER}
+      # DB_PASSWORD: ${DB_PASSWORD}
 
   frontend:
     build: ./frontend

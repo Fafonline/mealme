@@ -1,0 +1,9 @@
+<!-- app-header.component.html -->
+<div class="login-container">
+    <span class="login" *ngIf="!isLoggedIn"><a routerLink="/login">Login <i
+                class="fa-solid fa-right-to-bracket"></i></a> </span>
+    <span class="login" *ngIf="isLoggedIn"><a routerLink="/logout">Logout <i
+                class="fa-solid fa-right-to-bracket"></i></a> </span>
+    <!-- <span class="logout" *ngIf="isLoggedIn" (click)="logout">Logout <i class="fa-solid fa-right-from-bracket"></i>
+    </span> -->
+</div>

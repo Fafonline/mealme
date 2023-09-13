@@ -10,6 +10,7 @@ from couchbase.n1ql import N1QLQuery
 import time
 from datetime import datetime
 import random
+import os
 
 
 app = Flask(__name__)
@@ -40,6 +41,8 @@ def connect_to_couchbase():
  COUCHBASE_URL = "couchbase://db"
  COUCHBASE_USER = "guest"
  COUCHBASE_PASSWORD = "password"
+ COUCHBASE_USER = os.environ.get("DB_USER")
+ COUCHBASE_PASSWORD = os.environ.get("DB_PASSWORD")
 
 
  # Initialize Couchbase cluster and authenticate

@@ -6,7 +6,6 @@ import axios from 'axios';
 })
 export class MenuService {
   private baseUrl = 'http://127.0.0.1:5000'; // Replace with your Flask backend URL
-
   createMenu(data: any) {
     const headers = {
       'Content-Type': 'application/json'

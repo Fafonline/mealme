@@ -18,6 +18,7 @@ export class MenuComponent implements OnInit {
     numMeals: number = 5; // Default value for the number of meals to generate
     mealSelection: { [key: string]: boolean } = {};
     private mealSelectionSubscription!: Subscription;
+    private menuMealsSubscription!: Subscription;
     selectedDuration: string = 'week'; // Default selected duration
 
 
@@ -29,6 +30,11 @@ export class MenuComponent implements OnInit {
                 console.log("!!!Menu callback:", selection);
                 console.log("!!!Menu meals selection:", this.mealSelection);
                 this.mealSelection = selection;
+            }
+        );
+        this.menuMealsSubscription = this.sharedService.menuMeals$.subscribe(
+            (menuMeals) => {
+                this.menuMeals = menuMeals;
             }
         );
     }
@@ -56,6 +62,7 @@ export class MenuComponent implements OnInit {
         return Object.keys(this.mealSelection).filter((key) => this.mealSelection[key]);
     }
     updateMenuModel(response: any) {
+        console.log("Update Menu model")
         // Extract the meals array from the API response
         const mealsArray = response?.meals;
         // Update the menuMeals array with the meal names
@@ -68,6 +75,7 @@ export class MenuComponent implements OnInit {
         if (this.menuId !== undefined) {
             this.generateButtonLabel = "Yummy? Try again!"
         }
+        this.sharedService.setMenuMeals(this.menuMeals)
     }
     // Method to handle the button click event
     createNewMenu() {

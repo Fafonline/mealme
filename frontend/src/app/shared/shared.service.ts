@@ -24,6 +24,15 @@ export class SharedService {
     private eventSubject = new BehaviorSubject<string>("");
     event$: Observable<string> = this.eventSubject.asObservable();
 
+    menuMeals: Meal[] = [];
+
+    private menuMealsSubject = new BehaviorSubject<Meal[]>([]);
+    menuMeals$: Observable<Meal[]> = this.menuMealsSubject.asObservable();
+
+    setMenuMeals(menuMeals: Meal[]): void {
+        this.menuMealsSubject.next(menuMeals);
+    }
+
     getMealSelection(): { [key: string]: boolean } {
         return this.mealSelectionSubject.getValue();
     }

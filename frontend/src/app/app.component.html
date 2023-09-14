@@ -360,7 +360,11 @@
       </g>
     </g>
   </svg>
-  <span>Meal me!</span>
+  <span class="toolbar-item">
+    <a routerLink="/">Meal me!</a>
+    <a routerLink="/select-meals">Select Meals</a>
+    <a routerLink="/See-all-menus">See all Menus</a>
+  </span>
   <div class="spacer"></div>
   <span class="align-right"><app-authentication></app-authentication></span>
 </div>
@@ -439,7 +443,7 @@
 
   </div>
 
-  <div class="app-container">
+  <!-- <div class="app-container">
     <div class="left-column">
       <h1> Manage Meals</h1>
       <app-meals></app-meals>
@@ -452,7 +456,7 @@
       <h1>Existing Menus</h1>
       <app-menu-list></app-menu-list>
     </div>
-  </div>
+  </div> -->
 
   <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
   <!-- * * * * * * * * * * * The content above * * * * * * * * * * * -->
@@ -461,4 +465,5 @@
   <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
   <!-- * * * * * * * * * * End of Placeholder * * * * * * * * * * * -->
   <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-  <router-outlet></router-outlet>
+  <router-outlet>
+  </router-outlet>

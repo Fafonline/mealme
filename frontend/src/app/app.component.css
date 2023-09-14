@@ -15,3 +15,19 @@
   /* Use flexbox to align the span to the right */
   margin-left: auto;
 }
+
+.toolbar-item a {
+  margin-right: 10px;
+  /* Add spacing between the link and icon */
+  color: white;
+  /* Set the default text color to white */
+  text-decoration: none;
+  /* Remove underlines from the link */
+  transition: color 0.3s;
+  /* Smooth color transition */
+}
+
+.toolbar-item a:hover {
+  color: red;
+  /* Change the text color to red on hover */
+}

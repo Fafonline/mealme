@@ -14,8 +14,11 @@ import { AuthenticationComponent } from './authentication/authentication.compone
 import { LogoutComponent } from './logout/logout.component';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent }, // Define a route for the Login component
-  { path: 'logout', component: LogoutComponent }, // Define a route for the Login component
+  { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LogoutComponent },
+  { path: '', component: MenuComponent },
+  { path: 'select-meals', component: MealsComponent },
+  { path: 'See-all-menus', component: MenuListComponent },
   // Add other routes here if needed
 ];
 

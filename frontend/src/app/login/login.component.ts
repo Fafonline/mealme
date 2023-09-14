@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../shared/authentication.service'
 import { SharedService } from '../shared/shared.service'
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   username: string = '';
   password: string = '';
 
@@ -17,18 +17,6 @@ export class LoginComponent implements OnInit {
   isLoggedIn: boolean = false;
 
   constructor(private authenticationService: AuthenticationService, private sharedService: SharedService, private router: Router) { }
-
-
-  ngOnInit() {
-    this.eventSubscription = this.sharedService.event$.subscribe(
-      (event) => {
-        if (event === "LoginRequest") {
-          console.log("Request Login");
-          this.login();
-        }
-      }
-    );
-  }
 
   login() {
     // Perform your authentication logic here

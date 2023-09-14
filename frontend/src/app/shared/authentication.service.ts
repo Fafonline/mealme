@@ -9,6 +9,5 @@ export class AuthenticationService {
 
   setStatus(isLoggedIn: boolean) {
     this.loginStatusSubject.next(isLoggedIn)
-
   }
 }

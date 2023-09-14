@@ -1,5 +1,5 @@
-<h2>Import meals from Markdown</h2>
-<div>
+<div *ngIf="isLoggedIn">
+    <h2>Import meals from Markdown</h2>
     <textarea class="create-box" [(ngModel)]="markdownInput" placeholder="Enter meals in markdown format"></textarea>
     <br>
     <button class="input-button" (click)="createMeals()">Create Meals</button>

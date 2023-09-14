@@ -4,6 +4,9 @@ import { Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { Meal } from './meal.model'
 import { FormsModule } from '@angular/forms';
+import { AuthenticationService } from '../shared/authentication.service'
+
+
 
 @Component({
     selector: 'app-meals',
@@ -11,11 +14,13 @@ import { FormsModule } from '@angular/forms';
 })
 
 export class MealsComponent implements OnInit {
+    isLoggedIn: boolean = false
     meals: Meal[] = [];
     markdownInput: string = '';
     mealSelection: { [key: string]: boolean } = {};
     private mealSelectionSubscription!: Subscription;
-    constructor(private mealService: MealService, private sharedService: SharedService) { }
+    private isLoggedInSubscription!: Subscription;
+    constructor(private mealService: MealService, private sharedService: SharedService, private authenticationService: AuthenticationService) { }
     selectedMeal: Meal = { "id": "", "description": "", "name": "" };
     searchTerm: string = '';
     filteredMeals: Meal[] = [];
@@ -28,6 +33,12 @@ export class MealsComponent implements OnInit {
                 console.log("!!!Meals callback:", selection);
                 console.log("!!!Meals meals selection:", this.mealSelection);
                 this.mealSelection = selection;
+            }
+        );
+
+        this.isLoggedInSubscription = this.authenticationService.loginStatus$.subscribe(
+            (isLoggedIn) => {
+                this.isLoggedIn = isLoggedIn;
             }
         );
         console.log("Meals:", this.meals)

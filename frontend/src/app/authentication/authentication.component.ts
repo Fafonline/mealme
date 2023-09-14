@@ -23,14 +23,4 @@ export class AuthenticationComponent implements OnInit {
       }
     );
   }
-
-
-  login() {
-    // Implement your login logic here
-    this.sharedService.sendEvent("LoginRequest");
-  }
-
-  logout() {
-    this.authenticationService.setStatus(false);
-  }
 }

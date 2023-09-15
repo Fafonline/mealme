@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../shared/authentication.service'
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   username: string = '';
   password: string = '';
 
@@ -16,6 +16,14 @@ export class LoginComponent {
   isLoggedIn: boolean = false;
 
   constructor(private authenticationService: AuthenticationService, private router: Router) { }
+
+  ngOnInit(): void {
+    let accessToken = localStorage.getItem('access_token');
+    if (accessToken !== null) {
+      console.log("access token present:", accessToken)
+      this.authenticationService.setStatus(true);
+    }
+  }
 
   login(username: string, password: string): void {
     this.authenticationService.login({ username, password }).subscribe(

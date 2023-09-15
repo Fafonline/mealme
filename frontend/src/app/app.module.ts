@@ -15,12 +15,13 @@ import { AuthenticationComponent } from './authentication/authentication.compone
 import { LogoutComponent } from './logout/logout.component';
 import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthGuard } from './authentication/authentication.guard';
 
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
-  { path: '', component: MenuComponent },
+  { path: '', component: MenuComponent, canActivate: [AuthGuard] },
   { path: 'select-meals', component: MealsComponent },
   { path: 'See-all-menus', component: MenuListComponent },
   // Add other routes here if needed

@@ -3,7 +3,7 @@ FROM node:latest as node
 WORKDIR /app
 COPY . .
 RUN npm install
-RUN npm install axios bootstrap
+RUN npm install axios bootstrap httpclient
 RUN npm run build --prod
 #stage 2
 FROM nginx:alpine

@@ -87,12 +87,12 @@ export class MenuComponent implements OnInit {
         console.log("Menu Data:", menuData);
         if (this.menuId === undefined) {
             // Call the createMenu method from the MenuService
-            this.menuService.createMenu(menuData).then(
-                (response) => {
+            this.menuService.createMenu(menuData).subscribe(
+                (response: any) => {
                     console.log('Menu created successfully:', response);
                     this.updateMenuModel(response);
                 },
-                (error) => {
+                (error: any) => {
                     console.error('Error creating menu:', error);
                     // Handle error, if needed (e.g., show an error message)
                 }

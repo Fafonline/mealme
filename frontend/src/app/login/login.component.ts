@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../shared/authentication.service'
-import { SharedService } from '../shared/shared.service'
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,18 +15,22 @@ export class LoginComponent {
   private eventSubscription!: Subscription;
   isLoggedIn: boolean = false;
 
-  constructor(private authenticationService: AuthenticationService, private sharedService: SharedService, private router: Router) { }
+  constructor(private authenticationService: AuthenticationService, private router: Router) { }
 
-  login() {
-    // Perform your authentication logic here
-    if (this.username === 'guest' && this.password === 'password') {
-      this.authenticationService.setStatus(true);
-      alert('Login successful!');
-      // Redirect to the dashboard or another page upon successful login
-      // Use Angular Router for navigation
-      this.router.navigate(['/']);
-    } else {
-      alert('Login failed. Please check your credentials.');
-    }
+  login(username: string, password: string): void {
+    this.authenticationService.login({ username, password }).subscribe(
+      (response) => {
+        // Successful login - store the JWT in local storage
+        localStorage.setItem('access_token', response.access_token);
+        // Redirect to a protected route (e.g., dashboard)
+        this.router.navigate(['/']);
+        this.authenticationService.setStatus(true);
+      },
+      (error) => {
+        // Handle login error
+        console.error('Login failed:', error);
+        // Show an error message to the user
+      }
+    );
   }
 }

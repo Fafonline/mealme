@@ -218,7 +218,7 @@ def generate_menu_name():
 
 
 @app.route("/menu/", methods=["POST"])
-# @jwt_required()
+@jwt_required()
 def create_menu():
     data = request.get_json()
     menu_meals = generate_meal(data)

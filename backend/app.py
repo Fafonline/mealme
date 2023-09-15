@@ -94,6 +94,7 @@ def format_field_name(name):
 
 
 @app.route("/meal/<meal_id>", methods=["GET"])
+@jwt_required()
 def get_meal_by_id(meal_id):
     meal_key = COUCHBASE_MEAL_PREFIX + meal_id
     meal = collection.get(meal_key).value
@@ -105,6 +106,7 @@ def get_meal_by_id(meal_id):
 
 
 @app.route("/meals", methods=["GET"])
+@jwt_required()
 def get_meals():
     # Fetch all meals from the Couchbase bucket
     query = "SELECT id, name, description FROM `{}` WHERE META().id LIKE 'meal::%' ORDER BY name".format(COUCHBASE_BUCKET)
@@ -116,6 +118,7 @@ def get_meals():
 
 
 @app.route("/meal/", methods=["POST"])
+@jwt_required()
 def create_meal():
     data = request.get_json()
 
@@ -130,6 +133,7 @@ def create_meal():
 
 
 @app.route("/meal/<meal_id>", methods=["PATCH"])
+@jwt_required()
 def update_meal(meal_id):
     data = request.get_json()
     meal_key = COUCHBASE_MEAL_PREFIX + meal_id
@@ -144,6 +148,7 @@ def update_meal(meal_id):
 
 
 @app.route("/menu/<menu_id>", methods=["GET"])
+@jwt_required()
 def get_menu_by_id(menu_id):
     menu_key = COUCHBASE_MENU_PREFIX + menu_id
     menu = collection.get(menu_key).value

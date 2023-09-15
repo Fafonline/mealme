@@ -38,8 +38,8 @@ export class MealModalComponent implements OnInit {
         if (mealToEdit.id !== '') {
 
           console.log("!!!Meal to edit:", mealToEdit);
-          this.mealService.getMealById(mealToEdit.id).then((response) => {
-            this.editedMeal = response.data;
+          this.mealService.getMealById(mealToEdit.id).subscribe((response) => {
+            this.editedMeal = response;
           });
           this.editedMeal = mealToEdit;
         }
@@ -65,7 +65,7 @@ export class MealModalComponent implements OnInit {
   }
 
   saveChanges() {
-    this.mealService.updateMeal(this.editedMeal).then((response) => {
+    this.mealService.updateMeal(this.editedMeal).subscribe((response) => {
       console.log('Meal update successfully:', response);
     });
     this.closeModal();

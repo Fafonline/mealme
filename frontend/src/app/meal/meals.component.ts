@@ -59,8 +59,8 @@ export class MealsComponent implements OnInit {
         });
     }
     getMeals() {
-        this.mealService.getMeals().then((response) => {
-            this.meals = response.data;
+        this.mealService.getMeals().subscribe((response: any) => {
+            this.meals = response;
             console.log("Get meals:", this.meals)
             this.updateFilteredMeals();
             console.log("Filtered meals:", this.filteredMeals)
@@ -74,7 +74,7 @@ export class MealsComponent implements OnInit {
         });
         // Call the createMeal method from the MenuService for each meal
         mealsToCreate.forEach((meal) => {
-            this.mealService.createMeal(meal).then(
+            this.mealService.createMeal(meal).subscribe(
                 (response) => {
                     console.log('Meals Imported successfully:', response);
                     // Refresh the meals list
@@ -127,7 +127,7 @@ export class MealsComponent implements OnInit {
     }
 
     removeMeal(mealId: string) {
-        this.mealService.removeMeal(mealId).then((response) => {
+        this.mealService.removeMeal(mealId).subscribe((response) => {
             console.log("Removed with success:", mealId)
             this.getMeals();
         });

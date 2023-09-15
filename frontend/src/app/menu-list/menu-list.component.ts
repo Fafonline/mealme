@@ -29,12 +29,12 @@ export class MenuListComponent implements OnInit {
   }
   fetchAllMenus() {
     // Call the getAllMenus method from the MenuService
-    this.menuService.getAllMenus().then(
+    this.menuService.getAllMenus().subscribe(
       (menus: any) => {
         this.menuList = menus;
         console.log("All menus:", this.menuList);
       },
-      (error) => {
+      (error: any) => {
         console.error('Error fetching menus:', error);
         // Handle error, if needed (e.g., show an error message)
       }

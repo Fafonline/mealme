@@ -54,6 +54,7 @@ export class MenuComponent implements OnInit {
     }
     ngOnDestroy() {
         this.mealSelectionSubscription.unsubscribe();
+        this.menuMealsSubscription.unsubscribe();
     }
 
     getSelectedMeals(): string[] {
@@ -99,7 +100,7 @@ export class MenuComponent implements OnInit {
             );
         }
         else {
-            this.menuService.updateMenu(this.menuId, menuData).then(
+            this.menuService.updateMenu(this.menuId, menuData).subscribe(
                 (response) => {
                     console.log('Menu Updated successfully:', response);
                     this.updateMenuModel(response);
@@ -118,7 +119,7 @@ export class MenuComponent implements OnInit {
 
         console.log("Commit menu ", this.menuId);
         // Call the commit_menu service with the selected meal IDs
-        this.menuService.commitMenu(String(this.menuId)).then(
+        this.menuService.commitMenu(String(this.menuId)).subscribe(
             (response) => {
                 console.log('Menu committed successfully:', response);
                 // Handle success, if needed (e.g., show a success message)

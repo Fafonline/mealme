@@ -124,6 +124,7 @@ export class MenuComponent implements OnInit {
                 console.log('Menu committed successfully:', response);
                 // Handle success, if needed (e.g., show a success message)
                 this.menuMeals = [];
+                this.sharedService.setMenuMeals(this.menuMeals);
                 this.generateButtonLabel = "Hungry? Click here to get your meal!"
                 this.menuId = undefined
                 this.sharedService.sendEvent("UpdateMenuList")

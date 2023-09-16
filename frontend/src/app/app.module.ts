@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
   { path: '', component: MenuComponent, canActivate: [AuthGuard] },
-  { path: 'select-meals', component: MealsComponent },
+  { path: 'select-meals', component: MealsComponent, canActivate: [AuthGuard] },
   { path: 'See-all-menus', component: MenuListComponent },
   // Add other routes here if needed
 ];

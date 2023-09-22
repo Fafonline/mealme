@@ -4,6 +4,8 @@ from couchbase.auth import PasswordAuthenticator
 from couchbase.cluster import Cluster
 from couchbase.options import (ClusterOptions, ClusterTimeoutOptions,
                                QueryOptions)
+from flask_bcrypt import Bcrypt
+import logging
 
 import secrets
 import uuid
@@ -15,8 +17,14 @@ import os
 
 
 app = Flask(__name__)
-app.config["JWT_SECRET_KEY"] = "your-secret-key"
+app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
 jwt = JWTManager(app)
+bcrypt = Bcrypt(app)
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+
 # CORS(app, resources={r"/commit/*": {"origins": "*"}})
 
 
@@ -43,8 +51,6 @@ COUCHBASE_BUCKET = "meal_me"  # Replace with your actual bucket name
 def connect_to_couchbase():
     # Couchbase configuration
     COUCHBASE_URL = "couchbase://db"
-    COUCHBASE_USER = "guest"
-    COUCHBASE_PASSWORD = "password"
     COUCHBASE_USER = os.environ.get("DB_USER")
     COUCHBASE_PASSWORD = os.environ.get("DB_PASSWORD")
 
@@ -331,8 +337,55 @@ def delete_meal(meal_id):
         return jsonify({"error": "Failed to delete meal"}), 500
 
 
+def hash_password(password: str) -> str:
+    """Hash a plaintext password."""
+    hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
+    return hashed_pw
+
+
+def check_password(hashed_password: str, password_to_check: str) -> bool:
+    """Check a plaintext password against the hashed version."""
+    return bcrypt.check_password_hash(hashed_password, password_to_check)
+
+
 def verify_credentials(username, password):
-    return True
+    # Fetch the user from the database
+    user_key = "user::" + username
+    logger.debug(f"Login:{user_key}")
+    try:
+        user = collection.get(user_key).value
+    except:
+        # User not found
+        return False
+    # Verify the password using the hash stored in the database
+    stored_password = user.get("password", "")
+
+    logger.debug(f"Hashed Password: {stored_password}")
+    logger.debug(f"Password: {password}")
+    return check_password(stored_password, password)
+
+
+@app.route("/register/", methods=["POST"])
+def register():
+    data = request.get_json()
+    username = data.get("username", "")
+    password = data.get("password", "")
+
+    # Hash the user's password
+    hashed_password = hash_password(password)
+
+    # Store the username and hashed password in the database
+    user_data = {
+        "username": username,
+        "password": hashed_password
+    }
+    user_key = "user::" + username
+    try:
+        collection.insert(user_key, user_data)
+        return jsonify({"message": "User registered successfully"}), 201
+    except:
+        # Handle error e.g., username already exists
+        return jsonify({"error": "User registration failed"}), 500
 
 
 @app.route("/login/", methods=["POST"])
@@ -341,7 +394,8 @@ def login():
     username = data.get("username", "")
     password = data.get("password", "")
     # Verify the user's credentials (e.g., username and password)
-    if verify_credentials(password, username):
+
+    if verify_credentials(username, password):
         # Create an access token containing the user's identity (e.g., username)
         access_token = create_access_token(identity=username)
         return jsonify(access_token=access_token), 200
@@ -350,4 +404,4 @@ def login():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

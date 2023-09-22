@@ -9,8 +9,7 @@
 <button class="input-button" (click)="createNewMenu()">{{generateButtonLabel}}</button>
 <!-- Button to trigger commit_menu -->
 <button class="input-button-commit" *ngIf="menuMeals.length > 0" (click)="commitMenu()">Can't wait, I'm in!</button>
-
-<div class="meal-list">
+<div class="meal-list" *ngIf="menuMeals.length > 0">
     <div *ngFor="let meal of menuMeals" class="menu-meal-item">
         <input type="checkbox" [(ngModel)]="mealSelection[meal.id]" (change)="toggleMealSelection(meal)" />
         <label [for]="meal.name">{{ meal.name }}</label>

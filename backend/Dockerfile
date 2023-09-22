@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install Flask-CORS Flask-JWT-Extended
+RUN pip3 install Flask-CORS Flask-JWT-Extended Flask-Bcrypt
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 

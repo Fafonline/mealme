@@ -4,6 +4,9 @@
   height: 500px;
   /* Adjust the height as per your requirement */
   overflow-y: auto;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+  padding: 20px;
 }
 
 /* Add this style for individual menu items */
@@ -33,6 +36,7 @@
   border: 1px solid #ccc;
   border-radius: 10px;
   margin-bottom: 10px;
+  margin-top: 5px;
   /* Make sure the container for each meal allows for text wrapping as well */
   white-space: normal;
   display: flex;

@@ -8,7 +8,7 @@
 <h2>Existing meals ({{ meals.length }})</h2>
 <input class="search-box" type="text" [(ngModel)]="searchTerm" placeholder="Search for meals"
     (input)="updateFilteredMeals()">
-<div class="meal-list">
+<div class="meal-list" *ngIf="filteredMeals.length > 0">
     <div *ngFor="let meal of filteredMeals" class="meal-item">
         <!-- <input type="checkbox" [id]="meal.name" /> -->
         <span>

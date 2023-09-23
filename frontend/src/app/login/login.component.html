@@ -10,5 +10,11 @@
             <input type="password" id="password" name="password" [(ngModel)]="password" required />
         </div>
         <button type="submit">Login</button>
+        <div *ngIf="isLoggedIn" class="success-message">
+            ✨ Login successful! ✨
+        </div>
+        <div *ngIf="!isLoggedIn && loginFailed" class="error-message">
+            Login failed. Please try again.
+        </div>
     </form>
 </div>

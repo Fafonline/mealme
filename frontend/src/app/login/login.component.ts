@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
 
   private eventSubscription!: Subscription;
   isLoggedIn: boolean = false;
+  loginFailed: boolean = false;
 
   constructor(private authenticationService: AuthenticationService, private router: Router) { }
 
@@ -30,13 +31,17 @@ export class LoginComponent implements OnInit {
       (response) => {
         // Successful login - store the JWT in local storage
         localStorage.setItem('access_token', response.access_token);
+        localStorage.setItem('user', username);
         // Redirect to a protected route (e.g., dashboard)
         this.router.navigate(['/']);
         this.authenticationService.setStatus(true);
+        this.authenticationService.setUserName(username);
+        this.loginFailed = false;
       },
       (error) => {
         // Handle login error
         console.error('Login failed:', error);
+        this.loginFailed = true;
         // Show an error message to the user
       }
     );

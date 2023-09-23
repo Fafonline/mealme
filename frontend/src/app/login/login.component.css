@@ -46,3 +46,14 @@ button {
     border-radius: 3px;
     cursor: pointer;
 }
+
+.success-message {
+    color: gold;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}

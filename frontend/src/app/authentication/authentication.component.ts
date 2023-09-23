@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../shared/authentication.service'
-import { SharedService } from '../shared/shared.service'
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -11,15 +10,23 @@ import { Subscription } from 'rxjs';
 export class AuthenticationComponent implements OnInit {
 
   private isLoggedInSubscription!: Subscription;
+  private userNameSubscription!: Subscription;
   isLoggedIn: boolean = false;
+  userName: string = "";
 
-  constructor(private authenticationService: AuthenticationService, private sharedService: SharedService) { }
+  constructor(private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
     this.isLoggedInSubscription = this.authenticationService.loginStatus$.subscribe(
       (isLoggedIn) => {
         console.log("!!! Is Logged-In:", isLoggedIn);
         this.isLoggedIn = isLoggedIn;
+      }
+    );
+    this.userNameSubscription = this.authenticationService.username$.subscribe(
+      (userName) => {
+        console.log("!!! UserName:", userName);
+        this.userName = userName;
       }
     );
   }

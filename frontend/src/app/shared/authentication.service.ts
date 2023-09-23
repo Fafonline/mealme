@@ -9,6 +9,10 @@ import { catchError, switchMap } from 'rxjs/operators';
 export class AuthenticationService {
   private loginStatusSubject = new BehaviorSubject<boolean>(false);
   loginStatus$: Observable<boolean> = this.loginStatusSubject.asObservable();
+  private usernameSubject = new BehaviorSubject<string>("");
+  username$: Observable<string> = this.usernameSubject.asObservable();
+
+
   private baseUrl = 'http://127.0.0.1:5000'; // Replace with your login API URL
 
   constructor(private http: HttpClient) { }
@@ -17,7 +21,9 @@ export class AuthenticationService {
     this.loginStatusSubject.next(isLoggedIn)
   }
 
-
+  setUserName(userName: string) {
+    this.usernameSubject.next(userName)
+  }
   login(credentials: { username: string, password: string }): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'

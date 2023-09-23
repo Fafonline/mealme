@@ -43,24 +43,51 @@ export class MenuListComponent implements OnInit {
   toggleDropDown(menu: any) {
     menu.show = !menu.show;
   }
-  printMenu(menu: any) {
-    const printableContent = document.getElementById('printable-menu-item')?.innerHTML;
+  exportMenu(menu: any) {
+    // Create the menu content in the desired format
+    const menuContent = this.generateMenuContent(menu);
 
-    if (printableContent) {
-      const printWindow = window.open('', '_blank');
-      printWindow?.document.write(`
-        <html>
-          <head>
-            <title>${menu.name}</title>
-            <link rel="stylesheet" type="text/css" href="../styles/print-styles.css" media="print">
-          </head>
-          <body>
-            ${printableContent}
-          </body>
-        </html>
-      `);
-      printWindow?.document.close();
-      printWindow?.print();
-    }
+    // Create a Blob containing the menu content
+    const blob = new Blob([menuContent], { type: 'text/plain' });
+
+    // Create an anchor element for downloading
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const filename = `menu_${menu.name}_${new Date().toISOString().slice(0, 10)}.md`.replace(/\//g, '-').replace(/\s/g, '_');
+
+    // Set the download attribute with the file title
+    a.setAttribute('download', filename);
+
+    // Create an event to trigger the click event on the anchor element
+    const clickEvent = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: false,
+    });
+
+    // Dispatch the click event on the anchor element
+    a.dispatchEvent(clickEvent);
+
+    // Clean up by revoking the Blob URL
+    URL.revokeObjectURL(a.href);
+  }
+
+  generateMenuContent(menu: any): string {
+    // Define the format for the menu content
+    let creationDate = new Date().toISOString().slice(0, 10);
+    let menuContent = `# ${menu.name} - ${creationDate}\n`.replace(/\//g, '-');
+    // Add the creation_date field with the current date
+    menuContent += '---\n';
+    menuContent += `creation_date: ${creationDate}\n`
+    menuContent += '---\n';
+
+    menu.meals.forEach((meal: any, index: number) => {
+      menuContent += `- [ ] ${meal.name}\n`;
+    });
+
+    menuContent += '---\n';
+    menuContent += '#mealme\n';
+
+    return menuContent;
   }
 }

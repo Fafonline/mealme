@@ -6,7 +6,7 @@
         <BR>
         <span><i>{{menu.generation_date}}</i></span>
         <span>
-            <button class="print-button" (click)="printMenu(menu)"><i class="fa-solid fa-print"></i></button>
+            <button class="print-button" (click)="exportMenu(menu)"><i class="fa-solid fa-download"></i></button>
         </span>
         <div id="printable-menu-item" class="dropdown-panel" *ngIf="menu.show">
             <div class="menu-dropdown">

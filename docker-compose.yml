@@ -24,6 +24,7 @@ services:
       FLASK_APP: ./app.py
       DB_USER: "guest"
       DB_PASSWORD: "password"
+      JWT_SECRET_KEY: "3850-0252-0571-4373"
       # DB_USER: ${DB_USER}
       # DB_PASSWORD: ${DB_PASSWORD}
 

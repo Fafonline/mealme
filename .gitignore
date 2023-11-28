@@ -2,6 +2,6 @@ backend/__pycache__/app.cpython-38.pyc
 backend/.env
 .gitignore
 *.pyc
-backend/__pycache__/app.cpython-38.pyc
 backend/.env.sh
 .vscode/settings.json
+.env

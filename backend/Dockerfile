@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --upgrade pip
-RUN pip3 install Flask-CORS Flask-JWT-Extended Flask-Bcrypt couchbase
+RUN pip3 install Flask-CORS Flask-JWT-Extended Flask-Bcrypt couchbase rethinkdb looseversion
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 

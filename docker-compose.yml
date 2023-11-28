@@ -1,14 +1,23 @@
-version: "3.9" # optional since v1.27.0
 services:
   db:
-    image: couchbase:latest
-    deploy:
-      replicas: 1
+    image: rethinkdb
+    container_name: rethinkdb
+    restart: always
+    env_file:
+      - .env
     ports:
-      - 8091-8094:8091-8094
-      - 11210:11210
+      - 8080:8080
+      - 28015:28015
+      # - ${APP_CLIENT_PORT}:28015
+      # - ${APP_CLUSTER_PORT}:29015
+    command:
+      - /bin/bash
+      - -c
+      - |
+        rethinkdb create --initial-password  ${DB_PASSWORD}
+        rethinkdb --bind all
     volumes:
-      - ./couchbase/volumes/data:/opt/couchbase/var
+      - ./rethinkdb/data:/data
 
   backend:
     build: ./backend

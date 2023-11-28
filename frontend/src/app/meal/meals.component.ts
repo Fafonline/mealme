@@ -68,19 +68,17 @@ export class MealsComponent implements OnInit {
     }
 
     createMeals() {
+        console.log("Create meals");
         const mealNames = this.parseMarkdownInput();
         const mealsToCreate = mealNames.map((name) => {
             return new Meal('', name.trim(), ''); // Create a new Meal instance with the provided name
         });
         // Call the createMeal method from the MenuService for each meal
         mealsToCreate.forEach((meal) => {
+            console.log("Meal to import:", meal);
             this.mealService.createMeal(meal).subscribe(
                 (response) => {
-                    console.log('Meals Imported successfully:', response);
-                    // Refresh the meals list
-                    this.getMeals();
-                    this.updateFilteredMeals();
-                    this.markdownInput = "Enter meals in markdown format"
+                    console.log('Meal Imported successfully:', response);
                 },
                 (error) => {
                     console.error('Error creating meal:', error);
@@ -88,6 +86,11 @@ export class MealsComponent implements OnInit {
                 }
             );
         });
+        // Refresh the meals list
+        this.getMeals();
+        this.markdownInput = "Enter meals in markdown format"
+        this.updateFilteredMeals();
+
     }
     private parseMarkdownInput(): string[] {
         // Split the markdown input into lines

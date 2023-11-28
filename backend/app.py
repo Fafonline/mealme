@@ -14,6 +14,7 @@ bcrypt = Bcrypt(app)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 def add_cors_headers(response):
     # Replace "http://localhost:80" with the actual URL of your Angular application
     # response.headers['Access-Control-Allow-Origin'] = 'http://localhost'
@@ -34,10 +35,12 @@ r = RethinkDB()
 RDB_HOST = "db"  # Replace with your RethinkDB server host
 RDB_PORT = 28015              # Replace with your RethinkDB server port
 RDB_DB = "meal_me"           # Replace with your RethinkDB database name
-RDB_PASSWORD = os.environ.get("DB_PASSWORD") # Replace with your RethinkDB password
+# Replace with your RethinkDB password
+RDB_PASSWORD = os.environ.get("DB_PASSWORD")
 
 # Connect to RethinkDB
-conn = r.connect(host=RDB_HOST, port=RDB_PORT, db=RDB_DB,password=RDB_PASSWORD)
+conn = r.connect(host=RDB_HOST, port=RDB_PORT,
+                 db=RDB_DB, password=RDB_PASSWORD)
 
 # Create tables if they don't exist
 tables = ["meals", "menus", "users"]
@@ -49,13 +52,18 @@ for table in tables:
         logger.info(f"Table '{table}' already exists.")
 
 # Function to hash and check passwords
+
+
 def hash_password(password: str) -> str:
     return bcrypt.generate_password_hash(password).decode('utf-8')
+
 
 def check_password(hashed_password: str, password_to_check: str) -> bool:
     return bcrypt.check_password_hash(hashed_password, password_to_check)
 
 # Function to verify user credentials
+
+
 def verify_credentials(username, password):
     user = r.table('users').filter({'username': username}).run(conn)
     logger.info(f"User:{user}")
@@ -66,6 +74,8 @@ def verify_credentials(username, password):
         return False
 
 # Flask route to handle meal retrieval by ID
+
+
 @app.route("/meal/<meal_id>", methods=["GET"])
 @jwt_required()
 def get_meal_by_id(meal_id):
@@ -75,6 +85,8 @@ def get_meal_by_id(meal_id):
     return jsonify({"error": "Meal not found"}), 404
 
 # Flask route to handle meal retrieval
+
+
 @app.route("/meals", methods=["GET"])
 @jwt_required()
 def get_meals():
@@ -82,6 +94,8 @@ def get_meals():
     return jsonify(meals)
 
 # Flask route to handle meal creation
+
+
 @app.route("/meal/", methods=["POST"])
 @jwt_required()
 def create_meal():
@@ -92,7 +106,34 @@ def create_meal():
     r.table('meals').insert(data).run(conn)
     return jsonify(data), 201
 
+# Flask route to handle meal import
+
+
+@app.route("/import/", methods=["POST"])
+@jwt_required()
+def import_meals():
+    data = request.get_json()
+    logger.info(f"Import:{data}")
+    if "meals" in data and isinstance(data["meals"], list):
+        imported_meals = []
+        for meal_name in data["meals"]:
+            # Generate a new unique ID for the meal
+            meal_unique_id = r.uuid().run(conn)
+            # Create a new meal with the given name
+            new_meal = {
+                "id": str(meal_unique_id),
+                "name": meal_name,
+                "preparation_count": 0
+            }
+            # Insert the new meal into the database
+            r.table('meals').insert(new_meal).run(conn)
+            imported_meals.append(new_meal)
+        return jsonify({"imported_meals": imported_meals}), 201
+    return jsonify({"error": "Invalid payload format"}), 400
+
 # Flask route to handle meal update
+
+
 @app.route("/meal/<meal_id>", methods=["PATCH"])
 @jwt_required()
 def update_meal(meal_id):
@@ -104,6 +145,8 @@ def update_meal(meal_id):
     return jsonify({"error": "Meal not found"}), 404
 
 # Flask route to handle menu retrieval by ID
+
+
 @app.route("/menu/<menu_id>", methods=["GET"])
 @jwt_required()
 def get_menu_by_id(menu_id):
@@ -113,12 +156,17 @@ def get_menu_by_id(menu_id):
     return jsonify({"error": "Menu not found"}), 404
 
 # Flask route to handle menu retrieval
+
+
 @app.route("/menus", methods=["GET"])
 def get_menus():
-    menus = list(r.table('menus').filter({'status': 'Committed'}).order_by(r.desc('generation_date')).run(conn))
+    menus = list(r.table('menus').filter({'status': 'Committed'}).order_by(
+        r.desc('generation_date')).run(conn))
     return jsonify(menus)
 
 # Flask route to handle menu creation
+
+
 @app.route("/menu/", methods=["POST"])
 @jwt_required()
 def create_menu():
@@ -135,6 +183,8 @@ def create_menu():
     return jsonify(menu_data), 201
 
 # Flask route to handle menu update
+
+
 @app.route("/menu/<menu_id>", methods=["PATCH"])
 @jwt_required()
 def update_menu(menu_id):
@@ -151,6 +201,8 @@ def update_menu(menu_id):
     return jsonify({"error": "Menu not found"}), 404
 
 # Flask route to handle menu commit
+
+
 @app.route("/commit/<menu_id>", methods=["POST"])
 def commit_menu(menu_id):
     commit_date = r.now().run(conn)
@@ -160,7 +212,8 @@ def commit_menu(menu_id):
             meal_key = meal_id["id"]
             meal = r.table('meals').get(meal_key).run(conn)
             if meal:
-                meal["preparation_count"] = meal.get("preparation_count", 0) + 1
+                meal["preparation_count"] = meal.get(
+                    "preparation_count", 0) + 1
                 meal["last_commit_date"] = commit_date
                 r.table('meals').get(meal_key).update(meal).run(conn)
         menu["status"] = "Committed"
@@ -170,12 +223,16 @@ def commit_menu(menu_id):
     return jsonify({"error": "Menu not found"}), 404
 
 # Flask route to handle meal deletion
+
+
 @app.route("/meal/<meal_id>", methods=["DELETE"])
 def delete_meal(meal_id):
     r.table('meals').get(meal_id).delete().run(conn)
     return jsonify({"message": "Meal deleted successfully"}), 200
 
 # Flask route to handle user registration
+
+
 @app.route("/register/", methods=["POST"])
 def register():
     data = request.get_json()
@@ -192,6 +249,7 @@ def register():
     }
     r.table('users').insert(user_data).run(conn)
     return jsonify({"message": "User registered successfully"}), 201
+
 
 @app.route("/login/", methods=["POST"])
 def login():
@@ -211,4 +269,3 @@ def login():
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
-

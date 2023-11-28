@@ -62,6 +62,31 @@ export class MealService {
         );
     }
 
+    importMeal(meals: string[]): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+        });
+        let data = {
+            meals: meals
+        };
+        console.log("Meals to import:", data)
+        // Send an HTTP OPTIONS request first (preflight)
+        return this.http.options(`${this.baseUrl}/import/`, { headers }).pipe(
+            switchMap(() => {
+                // If preflight request succeeds, send the actual POST request
+                return this.http.post(`${this.baseUrl}/import/`, data, { headers }).pipe(
+                    catchError((error) => {
+                        // Handle any errors from the POST request
+                        return throwError(error);
+                    })
+                );
+            }),
+            catchError((error) => {
+                // Handle any errors from the preflight request
+                return throwError(error);
+            })
+        );
+    }
     updateMeal(data: Meal): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',

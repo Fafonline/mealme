@@ -145,11 +145,11 @@
 - Pomme de terre, sardines et asperges
 - Purée de butternut + poisson
 - Steak / frite
-- Bagel saumon fumée ✅ 2023-10-07
+- Bagel saumon fumée
 - croque monsieur
 - gnocchi poêlés
 - Tagliatelle à la carbonnara
-- penne parmesan et basilic ✅ 2023-09-15
+- penne parmesan et basilic
 - spaguetti bolognaises
 - Risotto butternut
 - Soupe courge violon
@@ -189,4 +189,4 @@
 - Lasagnes fenouille et saumon
 - potée
 - céréales méditéranéenes et boulettes
-- Salade riz thon maïs 
+- Salade riz thon maïs

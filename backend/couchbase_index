@@ -1,0 +1,1 @@
+CREATE INDEX idx_meal_info ON `meal_me` (META().id, id, name, description) WHERE META().id LIKE 'meal::%';

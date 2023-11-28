@@ -25,9 +25,6 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-# CORS(app, resources={r"/commit/*": {"origins": "*"}})
-
-
 def add_cors_headers(response):
     # Replace "http://localhost:80" with the actual URL of your Angular application
     # response.headers['Access-Control-Allow-Origin'] = 'http://localhost'
@@ -58,7 +55,7 @@ def connect_to_couchbase():
     authenticator = PasswordAuthenticator(COUCHBASE_USER, COUCHBASE_PASSWORD)
     options = ClusterOptions(authenticator)
     cluster = Cluster(COUCHBASE_URL, options)
-    # Connect to the bucket
+    # # Connect to the bucket
     bucket = cluster.bucket(COUCHBASE_BUCKET)
     return cluster, bucket
 

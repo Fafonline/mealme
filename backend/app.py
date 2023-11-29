@@ -3,6 +3,8 @@ from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 from flask_bcrypt import Bcrypt
 import logging
 from rethinkdb import RethinkDB
+from datetime import datetime
+import random
 import os
 
 app = Flask(__name__)
@@ -93,6 +95,111 @@ def get_meals():
     meals = list(r.table('meals').order_by('name').run(conn))
     return jsonify(meals)
 
+
+def calculate_meals_scores(meal_ids):
+    meals_scores = {}
+    for meal_id in meal_ids:
+        logger.info(f"meal id:{meal_id}")
+        # Fetch the meal document from RethinkDB
+        # meal = (r.table('meals').filter(
+        #     lambda meal: meal['id'] == meal_id).run(conn))[0]
+        meal = r.table('meals').get(meal_id).run(conn)
+        if meal:
+            preparation_count = meal.get("preparation_count", 0)
+            generation_date = meal.get(
+                "generation_date", datetime.now().timestamp())
+            logger.info(f"generation_date:{generation_date}")
+            # Calculate the score based on the last committed date and preparation count
+            score = calculate_score(generation_date, preparation_count)
+            meals_scores[meal_id] = score
+    return meals_scores
+
+
+def calculate_score(generation_date, preparation_count):
+    MAX_PREPARATION_COUNT = 10
+    # Calculate the date factor (tends to 0 when last commit date tends to now)
+    date_factor = 1 - (datetime.now().timestamp() - generation_date)
+    # Calculate the preparation count factor (tends to 1 when preparation count tends to 0)
+    preparation_count_factor = 1 - (preparation_count / MAX_PREPARATION_COUNT)
+    # Calculate the score based on a weighted sum of date and preparation count factors
+    date_weight = 0.7
+    preparation_count_weight = 0.3
+    score = (date_weight * date_factor) + \
+        (preparation_count_weight * preparation_count_factor)
+    # Normalize the score to be between 0 and 1
+    score = min(max(score, 0), 1)
+    return score
+
+
+def select_meals(meals_scores, num_meals_to_generate, default_meals):
+    # Select meals randomly based on their scores (higher score means higher probability of selection)
+    selected_meals_ids = default_meals
+    while len(selected_meals_ids) < num_meals_to_generate and len(meals_scores) > 0:
+        total_score = sum(meals_scores.values())
+        # Normalize the scores to be probabilities
+        probabilities = {meal_id: score /
+                         total_score for meal_id, score in meals_scores.items()}
+        # Choose a meal ID based on the probabilities
+        meal_id = random.choices(
+            list(meals_scores.keys()), weights=list(probabilities.values()))[0]
+        if meal_id not in selected_meals_ids:
+            selected_meals_ids.append(meal_id)
+        # Remove the selected meal from the scores dictionary to avoid selecting it again
+        meals_scores.pop(meal_id)
+    return selected_meals_ids
+
+
+def generate_meal(data):
+    chosen_meals_ids = data.get("default_meal_ids", [])
+    num_meals_to_generate = data.get("num_meals", 5)
+
+    # Fetch all available meal IDs
+    cursor = r.table('meals').pluck('id').run(conn)
+    meal_ids = list(cursor)
+    meal_ids = [meal['id'] for meal in meal_ids]
+
+    # Calculate scores for all meals based on date and preparation count
+    meals_scores = calculate_meals_scores(meal_ids)
+
+    # Select meals based on the score (higher score means higher probability of selection)
+    selected_meals_ids = select_meals(
+        meals_scores, num_meals_to_generate, chosen_meals_ids)
+
+    # Fetch the meal documents using the selected meal IDs
+    menu_meals = []
+    for meal_id in selected_meals_ids:
+        meal = r.table('meals').get(meal_id).run(conn)
+        if meal:
+            menu_meals.append(meal)
+    return menu_meals
+
+
+def generate_menu_name():
+    # List of positive adjectives
+    positive_adjectives = ["Delicious", "Tasty", "Mouthwatering",
+                           "Scrumptious", "Savory", "Appetizing", "Flavorful"]
+
+    # Fetch synonyms of the word "meal"
+    menu_synonyms = [
+        "food selection",
+        "cuisine list",
+        "fish options",
+        "feal choices",
+        "dining selections",
+        "culinary offerings",
+        "edible array",
+        "gastronomic options",
+        "fare list",
+        "dishes menu"
+    ]
+    # Combine positive adjectives and synonyms to create possible menu name components
+    possible_components = positive_adjectives + menu_synonyms
+
+    # Generate a random menu name by randomly selecting two components and joining them
+    menu_adjective = random.choice(positive_adjectives)
+    menu_synonyms = random.choice(menu_synonyms)
+    random_menu_name = menu_adjective+" " + menu_synonyms
+    return random_menu_name
 # Flask route to handle meal creation
 
 
@@ -170,6 +277,7 @@ def get_menus():
 @app.route("/menu/", methods=["POST"])
 @jwt_required()
 def create_menu():
+    logger.info("Create Menu")
     data = request.get_json()
     menu_meals = generate_meal(data)
     menu_unique_id = r.uuid().run(conn)

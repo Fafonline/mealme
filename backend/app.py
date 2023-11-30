@@ -101,14 +101,11 @@ def calculate_meals_scores(meal_ids):
     for meal_id in meal_ids:
         logger.info(f"meal id:{meal_id}")
         # Fetch the meal document from RethinkDB
-        # meal = (r.table('meals').filter(
-        #     lambda meal: meal['id'] == meal_id).run(conn))[0]
         meal = r.table('meals').get(meal_id).run(conn)
         if meal:
             preparation_count = meal.get("preparation_count", 0)
             generation_date = meal.get(
                 "generation_date", datetime.now().timestamp())
-            logger.info(f"generation_date:{generation_date}")
             # Calculate the score based on the last committed date and preparation count
             score = calculate_score(generation_date, preparation_count)
             meals_scores[meal_id] = score
@@ -118,7 +115,7 @@ def calculate_meals_scores(meal_ids):
 def calculate_score(generation_date, preparation_count):
     MAX_PREPARATION_COUNT = 10
     # Calculate the date factor (tends to 0 when last commit date tends to now)
-    date_factor = 1 - (datetime.now().timestamp() - generation_date)
+    date_factor = 1 - (generation_date.timestamp()/datetime.now().timestamp())
     # Calculate the preparation count factor (tends to 1 when preparation count tends to 0)
     preparation_count_factor = 1 - (preparation_count / MAX_PREPARATION_COUNT)
     # Calculate the score based on a weighted sum of date and preparation count factors

@@ -232,7 +232,7 @@ def import_meals():
             # Insert the new meal into the database
             r.table('meals').insert(new_meal).run(conn)
             imported_meals.append(new_meal)
-        return jsonify({"imported_meals": imported_meals}), 201
+        return jsonify({"message": "Meals imported successfully"}), 201
     return jsonify({"error": "Invalid payload format"}), 400
 
 # Flask route to handle meal update

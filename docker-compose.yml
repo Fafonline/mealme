@@ -4,7 +4,9 @@ services:
     container_name: rethinkdb
     restart: always
     env_file:
-      - ./deployment/.env
+      - .env
+    #[DOCKER]
+    network_mode: "host"
     ports:
       - 8080:8080
       - 28015:28015
@@ -13,19 +15,22 @@ services:
       - -c
       - |
         rethinkdb create --initial-password  ${DB_PASSWORD}
-        rethinkdb --bind all
-
+        rethinkdb --bind all --bind-http 127.0.0.1
     volumes:
       - ./rethinkdb/data:/data
 
   backend:
     build: ./backend
+    ####################
+    # [LOCAL]
+    network_mode: "host"
+    # [ DOCKER ]
     depends_on:
       - db
     ports:
       - 5000:5000
     env_file:
-      - ./deployment/.env
+      - .env
 
     volumes:
       - ./backend:/python-docker

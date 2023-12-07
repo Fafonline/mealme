@@ -17,11 +17,12 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 HOST=os.environ.get("HOST")
+CORS_ORIGIN = os.environ.get("CORS_ORIGIN")
 
 def add_cors_headers(response):
     # Replace "http://localhost:80" with the actual URL of your Angular application
     # response.headers['Access-Control-Allow-Origin'] = 'http://localhost'
-    response.headers['Access-Control-Allow-Origin'] = "http://"+HOST
+    # response.headers['Access-Control-Allow-Origin'] = "http://"+CORS_ORIGIN
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Headers'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
@@ -109,7 +110,7 @@ def calculate_meals_scores(meal_ids):
         if meal:
             preparation_count = meal.get("preparation_count", 0)
             generation_date = meal.get(
-                "generation_date", datetime.now().timestamp())
+                "generation_date", datetime.now())
             # Calculate the score based on the last committed date and preparation count
             score = calculate_score(generation_date, preparation_count)
             meals_scores[meal_id] = score

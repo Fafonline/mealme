@@ -1,16 +1,24 @@
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token
-from flask_bcrypt import Bcrypt
+
 import logging
-from rethinkdb import RethinkDB
+import db
+from db import DbManager
+from password import PasswordManager
 from datetime import datetime
 import random
 import os
 
 app = Flask(__name__)
+
+# SECRET
 app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
+
+# JWT
 jwt = JWTManager(app)
-bcrypt = Bcrypt(app)
+
+# Password management
+password_mgr = PasswordManager(app)
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -33,48 +41,19 @@ def after_request(response):
 
 
 # RethinkDB configuration
-r = RethinkDB()
-RDB_HOST = "db"  # Replace with your RethinkDB server host
-# RDB_HOST = "5.135.190.86"  # Replace with your RethinkDB server host
-# RDB_HOST = "127.0.0.1"  # Replace with your RethinkDB server host
-RDB_PORT = 28015              # Replace with your RethinkDB server port
-RDB_DB = "meal_me"           # Replace with your RethinkDB database name
-# Replace with your RethinkDB password
-RDB_PASSWORD = os.environ.get("DB_PASSWORD")
-
-# Connect to RethinkDB
-conn = r.connect(host=RDB_HOST, port=RDB_PORT,
-                 db=RDB_DB, password=RDB_PASSWORD)
-
-# Create tables if they don't exist
-tables = ["meals", "menus", "users"]
-for table in tables:
-    try:
-        r.table_create(table).run(conn)
-        logger.info(f"Table '{table}' created.")
-    except r.errors.ReqlOpFailedError:
-        logger.info(f"Table '{table}' already exists.")
-
-# Function to hash and check passwords
-
-
-def hash_password(password: str) -> str:
-    return bcrypt.generate_password_hash(password).decode('utf-8')
-
-
-def check_password(hashed_password: str, password_to_check: str) -> bool:
-    return bcrypt.check_password_hash(hashed_password, password_to_check)
+r,conn = db.connect()
+db_mgr = DbManager()
 
 # Function to verify user credentials
 
 
 def verify_credentials(username, password):
-    user = r.table('users').filter({'username': username}).run(conn)
+    user = db_mgr.get_user(username)
     logger.info(f"User:{user}")
     try:
         stored_password = user.next().get('password', '')
-        return check_password(stored_password, password)
-    except r.errors.ReqlCursorEmpty:
+        return password_mgr.check(stored_password, password)
+    except  db_mgr.not_found():
         return False
 
 # Flask route to handle meal retrieval by ID
@@ -347,7 +326,7 @@ def register():
     password = data.get("password", "")
 
     # Hash the user's password
-    hashed_password = hash_password(password)
+    hashed_password = password_mgr.hash(password)
 
     # Store the username and hashed password in the database
     user_data = {

@@ -16,13 +16,10 @@ bcrypt = Bcrypt(app)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-HOST=os.environ.get("HOST")
-CORS_ORIGIN = os.environ.get("CORS_ORIGIN")
 
 def add_cors_headers(response):
     # Replace "http://localhost:80" with the actual URL of your Angular application
     # response.headers['Access-Control-Allow-Origin'] = 'http://localhost'
-    # response.headers['Access-Control-Allow-Origin'] = "http://"+CORS_ORIGIN
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Headers'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
@@ -37,9 +34,9 @@ def after_request(response):
 
 # RethinkDB configuration
 r = RethinkDB()
-# RDB_HOST = "db"  # Replace with your RethinkDB server host
+RDB_HOST = "db"  # Replace with your RethinkDB server host
 # RDB_HOST = "5.135.190.86"  # Replace with your RethinkDB server host
-RDB_HOST = "127.0.0.1"  # Replace with your RethinkDB server host
+# RDB_HOST = "127.0.0.1"  # Replace with your RethinkDB server host
 RDB_PORT = 28015              # Replace with your RethinkDB server port
 RDB_DB = "meal_me"           # Replace with your RethinkDB database name
 # Replace with your RethinkDB password

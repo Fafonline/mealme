@@ -5,8 +5,7 @@ services:
     restart: always
     env_file:
       - .env
-    #[DOCKER]
-    network_mode: "host"
+    # network_mode: bridge
     ports:
       - 8080:8080
       - 28015:28015
@@ -21,10 +20,7 @@ services:
 
   backend:
     build: ./backend
-    ####################
-    # [LOCAL]
-    network_mode: "host"
-    # [ DOCKER ]
+    # network_mode: bridge
     depends_on:
       - db
     ports:

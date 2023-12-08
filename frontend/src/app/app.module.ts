@@ -16,6 +16,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthGuard } from './authentication/authentication.guard';
+import { WrongRouteComponent } from './wrong-route/wrong-route.component';
 
 
 const routes: Routes = [
@@ -24,12 +25,13 @@ const routes: Routes = [
   { path: '', component: MenuComponent, canActivate: [AuthGuard] },
   { path: 'select-meals', component: MealsComponent, canActivate: [AuthGuard] },
   { path: 'See-all-menus', component: MenuListComponent },
+  { path: '**', component: WrongRouteComponent }
   // Add other routes here if needed
 ];
 
 @NgModule({
   declarations: [
-    AppComponent, MealsComponent, MenuComponent, MealModalComponent, MenuListComponent, LoginComponent, AuthenticationComponent, LogoutComponent,
+    AppComponent, MealsComponent, MenuComponent, MealModalComponent, MenuListComponent, LoginComponent, AuthenticationComponent, LogoutComponent, WrongRouteComponent,
   ],
   imports: [
     BrowserModule,

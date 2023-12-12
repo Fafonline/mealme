@@ -60,7 +60,7 @@ class MealSelector:
         return selected_meals_ids
 
 
-    def generate_meal(self,data):
+    def generate_meals(self,data):
         chosen_meals_ids = data.get("default_meal_ids", [])
         num_meals_to_generate = data.get("num_meals", 5)
 

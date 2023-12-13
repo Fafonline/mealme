@@ -7,6 +7,7 @@ import os
 from lib.db import DbManager
 from lib.credentialManager import CredentialManager
 from lib.mealSelector import MealSelector
+from lib.mealDecorator import MealDecorator
 
 app = Flask(__name__)
 
@@ -67,6 +68,7 @@ def get_meal_by_id(meal_id):
 @jwt_required()
 def get_meals():
     meals = db_mgr.get_meals_order_by_name()
+    print(meals)
     return jsonify(meals)
 
 def generate_menu_name():
@@ -125,6 +127,10 @@ def import_meals():
                 "name": meal_name,
                 "preparation_count": 0
             }
+            # Meal Decorator
+            mealDecorator  = MealDecorator()
+            new_meal = mealDecorator.get_ingredients(new_meal)
+            logger.info(new_meal)
             # Insert the new meal into the database
             db_mgr.insert_data(meal_unique_id,new_meal)
             imported_meals.append(new_meal)

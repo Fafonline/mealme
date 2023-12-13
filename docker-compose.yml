@@ -5,7 +5,7 @@ services:
     restart: always
     env_file:
       - .env
-    # network_mode: bridge
+    # network_mode: host
     ports:
       - 8080:8080
       - 28015:28015
@@ -20,7 +20,7 @@ services:
 
   backend:
     build: ./backend
-    # network_mode: bridge
+    # network_mode: host
     depends_on:
       - db
     ports:

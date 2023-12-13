@@ -34,6 +34,7 @@ class DbManager:
                 logger.info(f"Table '{table}' created.")
             except r.errors.ReqlOpFailedError:
                 logger.info(f"Table '{table}' already exists.")
+
         return r,conn
 
     def get_user(self, username):
@@ -81,4 +82,6 @@ class DbManager:
     
     def delete_meal(self,id):
         self.r.table('meals').get(id).delete().run(self.conn)
-
+    
+    def purge_meals(self):
+        return self.r.table("meals").delete().run(self.conn)

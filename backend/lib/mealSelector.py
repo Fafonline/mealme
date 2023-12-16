@@ -2,6 +2,7 @@
 import logging
 from datetime import datetime
 import random
+from lib import utils
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -43,21 +44,50 @@ class MealSelector:
 
 
     def select_meals(self, meals_scores, num_meals_to_generate, default_meals):
-        # Select meals randomly based on their scores (higher score means higher probability of selection)
+        tracked_ingredients = ["Riz", "Pâte", "Pommes de terre", "Haricot rouges", "Lentilles","Frites","Poulet","Coco"]
+        selected_meals_ingredient = []
         selected_meals_ids = default_meals
+    
         while len(selected_meals_ids) < num_meals_to_generate and len(meals_scores) > 0:
             total_score = sum(meals_scores.values())
+    
             # Normalize the scores to be probabilities
-            probabilities = {meal_id: score /
-                             total_score for meal_id, score in meals_scores.items()}
+            probabilities = {meal_id: score / total_score for meal_id, score in meals_scores.items()}
+    
             # Choose a meal ID based on the probabilities
-            meal_id = random.choices(
-                list(meals_scores.keys()), weights=list(probabilities.values()))[0]
-            if meal_id not in selected_meals_ids:
+            meal_id = random.choices(list(meals_scores.keys()), weights=list(probabilities.values()))[0]
+    
+            if meal_id in selected_meals_ids:
+                continue
+            
+            # Fetch the meal by ID
+            selected_meal = self.db_mgr.get_meal(meal_id)
+            logger.info("Check selected meal:")
+            logger.info(selected_meal["name"])
+            # Check if any ingredient in the meal is in the tracked_ingredients list
+            meal_ingredients = selected_meal.get("ingredient",[])
+            logger.info("Ingredient:")
+            logger.info(meal_ingredients)
+            found_tracked_ingredient = utils.find_elements_in_array(meal_ingredients, tracked_ingredients)
+            logger.info("Found tracked Ingredient:")
+            logger.info(found_tracked_ingredient)
+            is_rejected = False
+
+            if found_tracked_ingredient:
+                # Check the condition to determine whether to reject the meal or not
+                is_rejected = reject_tracked_ingredient(found_tracked_ingredient,selected_meals_ingredient)
+            if not is_rejected:
+                # Add the meal ID to the selected meals if the condition is met
                 selected_meals_ids.append(meal_id)
+                selected_meals_ingredient = utils.append_without_duplicates(selected_meals_ingredient,found_tracked_ingredient)
+
             # Remove the selected meal from the scores dictionary to avoid selecting it again
             meals_scores.pop(meal_id)
+            logger.info("Selected meals ingredients:")
+            logger.info(selected_meals_ingredient)
+    
         return selected_meals_ids
+
 
 
     def generate_meals(self,data):
@@ -83,3 +113,10 @@ class MealSelector:
             if meal:
                 menu_meals.append(meal)
         return menu_meals
+
+def reject_tracked_ingredient(tracked_ingredient, selected_meals_ingredients):
+    found_elements = utils.find_elements_in_array(tracked_ingredient, selected_meals_ingredients)
+    if(found_elements):
+        return True
+    else:
+        return False

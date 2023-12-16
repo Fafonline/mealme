@@ -83,5 +83,14 @@ class DbManager:
     def delete_meal(self,id):
         self.r.table('meals').get(id).delete().run(self.conn)
     
+    def get_tracked_ingredients(self):
+        return self.r.table('tracked_ingredients').pluck('name').run(self.conn)
+    
+    def set_tracked_ingredients(self,ingredients):
+        self.r.table('tracked_ingredients').delete().run(self.conn)
+        for ingredient in ingredients:
+            self.r.table('tracked_ingredients').insert(ingredient).run(self.conn)
+    
     def purge_meals(self):
-        return self.r.table("meals").delete().run(self.conn)
+        self.r.table("meals").delete().run(self.conn)
+

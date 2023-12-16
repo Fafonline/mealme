@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 # RethinkDB configuration
 db_mgr = DbManager()
-
+# db_mgr.purge_meals()
 # Password management
 credential_mgr = CredentialManager(app, db_mgr)
 
@@ -255,6 +255,15 @@ def login():
         return jsonify(access_token=access_token), 200
     else:
         return jsonify({"message": "Invalid credentials"}), 401
+
+# Flask route for tracked ingredient
+
+@app.route("/tracked_ingredient", methods=["POST"])
+def tracked_ingredient():
+    data = request.get_json()
+    tracked_ingredients = data.get("ingredients")
+    db_mgr.set_tracked_ingredients(tracked_ingredients)
+    return jsonify({"message: Tracked ingredient imported successfully"})
 
 # Main
 if __name__ == "__main__":

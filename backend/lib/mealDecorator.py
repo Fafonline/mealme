@@ -31,8 +31,8 @@ class MealDecorator:
         # Parse the generated ingredient as JSON
         try:
             ingredient_json = json.loads(generated_ingredient)
-            meal_data['ingredient'] = ingredient_json
-            return meal_data
+            meal_data.update(ingredient_json)
         except json.JSONDecodeError:
-            # Handle parsing error
-            return {"error": "Failed to parse the generated ingredient as JSON."}
+            logger.error("Failed to parse the generated ingredient as JSON.")
+        
+        return meal_data

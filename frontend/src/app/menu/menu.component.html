@@ -11,7 +11,14 @@
 <button class="input-button-commit" *ngIf="menuMeals.length > 0" (click)="commitMenu()">Can't wait, I'm in!</button>
 <div class="meal-list" *ngIf="menuMeals.length > 0">
     <div *ngFor="let meal of menuMeals" class="menu-meal-item">
-        <input type="checkbox" [(ngModel)]="mealSelection[meal.id]" (change)="toggleMealSelection(meal)" />
-        <label [for]="meal.name">{{ meal.name }}</label>
+        <span [ngStyle]="{'justify-content': 'space-between','display': 'flex'}">
+            <span>
+                <input type="checkbox" [(ngModel)]="mealSelection[meal.id]" (change)="toggleMealSelection(meal)" />
+                <label [for]="meal.name">{{ meal.name }}</label>
+            </span>
+            <span class="nutriscore"
+                [ngStyle]="{'background': getNutriscoreColor(meal.nutriscore),'align-item':'right'}">{{meal.nutriscore}}
+            </span>
+        </span>
     </div>
 </div>

@@ -68,3 +68,11 @@
   border-color: #007bff;
   /* Change the border color on focus */
 }
+
+.nutriscore {
+  border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+  padding: 5px;
+  align-items: right;
+}

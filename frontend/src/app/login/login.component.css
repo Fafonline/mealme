@@ -47,6 +47,14 @@ button {
     cursor: pointer;
 }
 
+button:hover {
+    background-color: #00bfff;
+}
+
+button:active {
+    background-color: #007BFF;
+}
+
 .success-message {
     color: gold;
     font-weight: bold;

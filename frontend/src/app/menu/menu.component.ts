@@ -71,6 +71,7 @@ export class MenuComponent implements OnInit {
             id: meal.id,
             name: meal.name,
             description: meal.description,
+            nutriscore: meal.nutriscore
         }));
         this.menuId = response.id;
         if (this.menuId !== undefined) {
@@ -138,5 +139,21 @@ export class MenuComponent implements OnInit {
     toggleMealSelection(meal: any) {
         this.sharedService.toggleMealSelection(meal);
         console.log("Item selected from menu:", this.sharedService.getSelectedMeals());
+    }
+    getNutriscoreColor(nutriscore: string): string {
+        switch (nutriscore) {
+            case 'E':
+                return 'red';
+            case 'D':
+                return 'orange';
+            case 'C':
+                return 'yellow';
+            case 'B':
+                return 'lightgreen';
+            case 'A':
+                return 'green';
+            default:
+                return 'white'; // Default color if nutriscore is not recognized
+        }
     }
 }

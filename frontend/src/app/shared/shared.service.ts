@@ -15,7 +15,7 @@ export class SharedService {
     private showMenuModelSubject = new BehaviorSubject<boolean>(false);
     showMenuModel$: Observable<boolean> = this.showMenuModelSubject.asObservable();
 
-    private mealToEditSubject = new BehaviorSubject<Meal>(new Meal('', '', ''));
+    private mealToEditSubject = new BehaviorSubject<Meal>(new Meal('', '', '', ''));
     mealToEdit$: Observable<Meal> = this.mealToEditSubject.asObservable();
 
     private menuToShowSubject = new BehaviorSubject<Menu>(new Menu('', '', []));

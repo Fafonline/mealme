@@ -15,11 +15,12 @@ export class MealModalComponent implements OnInit {
     id: '',
     name: '',
     description: '',
+    nutriscore: ''
   };
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
   @Output() save: EventEmitter<Meal> = new EventEmitter<Meal>();
 
-  editedMeal: Meal = { id: '', name: '', description: '' };
+  editedMeal: Meal = { id: '', name: '', description: '', nutriscore: '' };
   showModal = false;
   private showEditModalSubscrption!: Subscription;
   private mealToEditSubscrption!: Subscription;

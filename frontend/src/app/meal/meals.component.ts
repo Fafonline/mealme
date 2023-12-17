@@ -21,7 +21,7 @@ export class MealsComponent implements OnInit {
     private mealSelectionSubscription!: Subscription;
     private isLoggedInSubscription!: Subscription;
     constructor(private mealService: MealService, private sharedService: SharedService, private authenticationService: AuthenticationService) { }
-    selectedMeal: Meal = { "id": "", "description": "", "name": "" };
+    selectedMeal: Meal = { "id": "", "description": "", "name": "", "nutriscore": "" };
     searchTerm: string = '';
     filteredMeals: Meal[] = [];
 
@@ -112,14 +112,14 @@ export class MealsComponent implements OnInit {
 
     // Method to close the edit modal
     closeEditModal() {
-        this.selectedMeal = new Meal('', '', '');
+        this.selectedMeal = new Meal('', '', '', '');
     }
 
     // Method to update the meal data after editing
     updateMeal(updatedMeal: Meal) {
         // Update the meal data in your meals array or make an API call
         // and close the modal
-        this.selectedMeal = new Meal('', '', '');
+        this.selectedMeal = new Meal('', '', '', '');
     }
 
     removeMeal(mealId: string) {
@@ -127,5 +127,22 @@ export class MealsComponent implements OnInit {
             console.log("Removed with success:", mealId)
             this.getMeals();
         });
+    }
+    // Inside your component class
+    getNutriscoreColor(nutriscore: string): string {
+        switch (nutriscore) {
+            case 'E':
+                return 'red';
+            case 'D':
+                return 'orange';
+            case 'C':
+                return 'yellow';
+            case 'B':
+                return 'lightgreen';
+            case 'A':
+                return 'green';
+            default:
+                return 'white'; // Default color if nutriscore is not recognized
+        }
     }
 }

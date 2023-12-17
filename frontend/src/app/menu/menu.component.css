@@ -21,6 +21,7 @@
   margin-bottom: 10px;
   /* Make sure the container for each menu allows for text wrapping as well */
   align-items: left;
+  justify-content: space-between;
 }
 
 .menu-meal-item:hover {

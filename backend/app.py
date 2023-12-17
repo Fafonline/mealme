@@ -30,6 +30,7 @@ credential_mgr = CredentialManager(app, db_mgr)
 # Meal selector
 mealSelector = MealSelector(db_mgr)
 
+
 def add_cors_headers(response):
     # Replace "http://localhost:80" with the actual URL of your Angular application
     # response.headers['Access-Control-Allow-Origin'] = 'http://localhost'
@@ -45,16 +46,20 @@ def after_request(response):
     return response
 
 # Function to verify user credentials
+
+
 def verify_credentials(username, password):
     user = db_mgr.get_user(username)
     logger.info(f"User:{user}")
     try:
         stored_password = user.next().get('password', '')
         return credential_mgr.check(stored_password, password)
-    except  db_mgr.not_found():
+    except db_mgr.not_found():
         return False
 
 # Flask route to handle meal retrieval by ID
+
+
 @app.route("/meal/<meal_id>", methods=["GET"])
 @jwt_required()
 def get_meal_by_id(meal_id):
@@ -64,12 +69,15 @@ def get_meal_by_id(meal_id):
     return jsonify({"error": "Meal not found"}), 404
 
 # Flask route to handle meal retrieval
+
+
 @app.route("/meals", methods=["GET"])
 @jwt_required()
 def get_meals():
     meals = db_mgr.get_meals_order_by_name()
     print(meals)
     return jsonify(meals)
+
 
 def generate_menu_name():
     # List of positive adjectives
@@ -98,6 +106,8 @@ def generate_menu_name():
     random_menu_name = menu_adjective+" " + menu_synonyms
     return random_menu_name
 # Flask route to handle meal creation
+
+
 @app.route("/meal/", methods=["POST"])
 @jwt_required()
 def create_meal():
@@ -105,7 +115,7 @@ def create_meal():
     meal_unique_id = db_mgr.generate_uuid()
     data["id"] = str(meal_unique_id)
     data["preparation_count"] = 0
-    db_mgr.insert_data(meal_unique_id,data)
+    db_mgr.insert_data(meal_unique_id, data)
     return jsonify(data), 201
 
 # Flask route to handle meal import
@@ -128,27 +138,31 @@ def import_meals():
                 "preparation_count": 0
             }
             # Meal Decorator
-            mealDecorator  = MealDecorator()
+            mealDecorator = MealDecorator()
             new_meal = mealDecorator.get_ingredients(new_meal)
             logger.info(new_meal)
             # Insert the new meal into the database
-            db_mgr.insert_data(meal_unique_id,new_meal)
+            db_mgr.insert_data(meal_unique_id, new_meal)
             imported_meals.append(new_meal)
         return jsonify({"message": "Meals imported successfully"}), 201
     return jsonify({"error": "Invalid payload format"}), 400
 
 # Flask route to handle meal update
+
+
 @app.route("/meal/<meal_id>", methods=["PATCH"])
 @jwt_required()
 def update_meal(meal_id):
     data = request.get_json()
-    db_mgr.update_data(meal_id,data)
+    db_mgr.update_data(meal_id, data)
     updated_meal = db_mgr.get_meal(meal_id)
     if updated_meal:
         return jsonify(updated_meal)
     return jsonify({"error": "Meal not found"}), 404
 
 # Flask route to handle menu retrieval by ID
+
+
 @app.route("/menu/<menu_id>", methods=["GET"])
 @jwt_required()
 def get_menu_by_id(menu_id):
@@ -158,12 +172,16 @@ def get_menu_by_id(menu_id):
     return jsonify({"error": "Menu not found"}), 404
 
 # Flask route to handle menu retrieval
+
+
 @app.route("/menus", methods=["GET"])
 def get_menus():
     menus = db_mgr.get_menus_ordered_by_date()
     return jsonify(menus)
 
 # Flask route to handle menu creation
+
+
 @app.route("/menu/", methods=["POST"])
 @jwt_required()
 def create_menu():
@@ -177,10 +195,12 @@ def create_menu():
         "name": generate_menu_name(),
         "status": "Pending"
     }
-    db_mgr.insert_menu(menu_unique_id,menu_data)
+    db_mgr.insert_menu(menu_unique_id, menu_data)
     return jsonify(menu_data), 201
 
 # Flask route to handle menu update
+
+
 @app.route("/menu/<menu_id>", methods=["PATCH"])
 @jwt_required()
 def update_menu(menu_id):
@@ -190,13 +210,15 @@ def update_menu(menu_id):
         "id": menu_id,
         "meals": menu_meals
     }
-    db_mgr.update_menu(menu_id,menu_data)
+    db_mgr.update_menu(menu_id, menu_data)
     updated_menu = db_mgr.get_menu(menu_id)
     if updated_menu:
         return jsonify(updated_menu)
     return jsonify({"error": "Menu not found"}), 404
 
 # Flask route to handle menu commit
+
+
 @app.route("/commit/<menu_id>", methods=["POST"])
 def commit_menu(menu_id):
     commit_date = db_mgr.get_commit_date()
@@ -209,20 +231,24 @@ def commit_menu(menu_id):
                 meal["preparation_count"] = meal.get(
                     "preparation_count", 0) + 1
                 meal["last_commit_date"] = commit_date
-                db_mgr.update_data(meal_key,meal)
+                db_mgr.update_data(meal_key, meal)
         menu["status"] = "Committed"
         menu["generation_date"] = commit_date
-        db_mgr.update_menu(menu_id,menu)
+        db_mgr.update_menu(menu_id, menu)
         return jsonify(menu), 201
     return jsonify({"error": "Menu not found"}), 404
 
 # Flask route to handle meal deletion
+
+
 @app.route("/meal/<meal_id>", methods=["DELETE"])
 def delete_meal(meal_id):
     db_mgr.delete_meal(meal_id)
     return jsonify({"message": "Meal deleted successfully"}), 200
 
 # Flask route to handle user registration
+
+
 @app.route("/register/", methods=["POST"])
 def register():
     data = request.get_json()
@@ -241,6 +267,8 @@ def register():
     return jsonify({"message": "User registered successfully"}), 201
 
 # Flask route for login
+
+
 @app.route("/login/", methods=["POST"])
 def login():
     logger.info("Login ...")
@@ -258,12 +286,14 @@ def login():
 
 # Flask route for tracked ingredient
 
+
 @app.route("/tracked_ingredient", methods=["POST"])
 def tracked_ingredient():
     data = request.get_json()
     tracked_ingredients = data.get("ingredients")
     db_mgr.set_tracked_ingredients(tracked_ingredients)
     return jsonify({"message: Tracked ingredient imported successfully"})
+
 
 # Main
 if __name__ == "__main__":

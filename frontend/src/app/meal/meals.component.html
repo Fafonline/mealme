@@ -10,12 +10,13 @@
     (input)="updateFilteredMeals()">
 <div class="meal-list" *ngIf="filteredMeals.length > 0">
     <div *ngFor="let meal of filteredMeals" class="meal-item">
-        <!-- <input type="checkbox" [id]="meal.name" /> -->
         <span>
             <input type="checkbox" [(ngModel)]="mealSelection[meal.id]" (change)="toggleMealSelection(meal)" />
             <label [for]="meal.name">{{ meal.name }}</label>
         </span>
         <span>
+            <span class="nutriscore"
+                [ngStyle]="{'background': getNutriscoreColor(meal.nutriscore)}">{{meal.nutriscore}}</span>
             <button class="edit-button" (click)="openEditModal(meal)">
                 <i class="fas fa-edit"></i>
             </button>

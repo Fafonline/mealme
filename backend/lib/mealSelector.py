@@ -65,7 +65,7 @@ class MealSelector:
             logger.info("Check selected meal:")
             logger.info(selected_meal["name"])
             # Check if any ingredient in the meal is in the tracked_ingredients list
-            meal_ingredients = selected_meal.get("ingredient",[])
+            meal_ingredients = selected_meal.get("ingredients",[])
             logger.info("Ingredient:")
             logger.info(meal_ingredients)
             found_tracked_ingredient = utils.find_elements_in_array(meal_ingredients, tracked_ingredients)

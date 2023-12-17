@@ -13,9 +13,17 @@ class MealDecorator:
             api_key=os.environ.get("OPENAI_API_KEY"),
         )
         self.response_format = {
-            "ingredient":["Ingredient 1","Ingredient 2"]
+            "ingredients":["Ingredient 1","Ingredient 2"],
+            "nutriscore":"A"
         }
-        self.prompt = "D'apres ce repas:\nName: {}\nDescription: {}\n Deduire la composition et la retourner uniquement sous forme de tableau de string Json au format {}.PAS D'AUTRE TEXTE. Toujours en francais. Pas de \' pour les champs JSON mais unique des \""
+        self.prompt = """D'apres ce repas:\nName: {}\nDescription: {}\n, 
+                            Deduire la composition et la retourner uniquement sous forme de tableau de string Json
+                            Donner une estimation du score nutriscore. 
+                            au format {}.
+                            PAS D'AUTRE TEXTE. 
+                            Toujours en francais. 
+                            Pas de \' pour les champs JSON mais unique des \".
+                            """
 
     def get_ingredients(self,meal_data):
         response = self.client.chat.completions.create(
@@ -31,6 +39,7 @@ class MealDecorator:
         # Parse the generated ingredient as JSON
         try:
             ingredient_json = json.loads(generated_ingredient)
+            logger.info(ingredient_json)
             meal_data.update(ingredient_json)
         except json.JSONDecodeError:
             logger.error("Failed to parse the generated ingredient as JSON.")

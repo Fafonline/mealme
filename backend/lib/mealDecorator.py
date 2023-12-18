@@ -14,6 +14,7 @@ class MealDecorator:
         )
         self.response_format = {
             "ingredients":["Ingredient 1","Ingredient 2"],
+            "description":"Description du plat et et idee de recette",
             "nutriscore":"A"
         }
         self.prompt = """D'apres ce repas:\nName: {}\nDescription: {}\n, 

@@ -90,14 +90,26 @@ export class MealsComponent implements OnInit {
         const lines = this.markdownInput.split('\n');
 
         // Extract meal names from each line (assuming they start with a hyphen and space)
-        const mealNames = lines.map((line) => {
+        const mealNames = lines.map((line, index) => {
             const match = line.match(/^\s*- (.+)/);
-            return match ? match[1] : '';
+
+            if (!match) {
+                throw new Error(`Invalid format at line ${index + 1}: ${line}`);
+            }
+
+            return match[1];
         });
 
         // Filter out any empty or whitespace-only names
-        return mealNames.filter((name) => name.trim() !== '');
+        const nonEmptyMealNames = mealNames.filter((name) => name.trim() !== '');
+
+        if (nonEmptyMealNames.length !== lines.length) {
+            throw new Error(`Empty or invalid lines found.`);
+        }
+
+        return nonEmptyMealNames;
     }
+
     toggleMealSelection(meal: Meal) {
         this.sharedService.toggleMealSelection(meal);
         console.log("Item selected from existing meals:", this.sharedService.getSelectedMeals());

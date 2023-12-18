@@ -136,7 +136,7 @@ export class MealsComponent implements OnInit {
             case 'D':
                 return 'orange';
             case 'C':
-                return 'yellow';
+                return '#ffe815';
             case 'B':
                 return 'lightgreen';
             case 'A':

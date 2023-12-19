@@ -74,16 +74,16 @@ export class MealsComponent implements OnInit {
         this.mealService.importMeal(mealNames).subscribe(
             (response) => {
                 console.log('Meals Imported successfully:', response);
+                // Refresh the meals list
+                this.getMeals();
+                this.markdownInput = "Enter meals in markdown format"
+                this.updateFilteredMeals();
             },
             (error) => {
                 console.error('Error creating meal:', error);
                 // Handle error, if needed (e.g., show an error message)
             }
         );
-        // Refresh the meals list
-        this.getMeals();
-        this.markdownInput = "Enter meals in markdown format"
-        this.updateFilteredMeals();
     }
     private parseMarkdownInput(): string[] {
         // Split the markdown input into lines

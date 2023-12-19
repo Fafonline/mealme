@@ -24,3 +24,19 @@
   max-height: 80%;
   overflow: auto;
 }
+
+.description-box {
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  width: 300px;
+  height: 200px;
+  /* Adjust the width as needed */
+  transition: border-color 0.3s ease-in-out;
+}
+
+.description-box:focus {
+  outline: none;
+  border-color: #007bff;
+  /* Change the border color on focus */
+}

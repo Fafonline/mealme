@@ -105,7 +105,7 @@ class DbManager:
         self.execute_query(self.r.table('menus').insert(menu))
 
     def update_menu(self, id, menu):
-        self.execute_query(self.r.table('menus').get(id))
+        self.execute_query(self.r.table('menus').get(id).update(menu))
 
     def get_commit_date(self):
         return self.execute_query(self.r.now())

@@ -4,24 +4,27 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 def strip_plural(word):
     # Strips common plural forms (simple approach)
     if word.endswith("s"):
         return word[:-1]
     return word
 
+
 def find_elements_in_array(elements, array):
     # Convert elements and array elements to lowercase for case-insensitive comparison
     elements_lower = [strip_plural(element.lower()) for element in elements]
     array_lower = [strip_plural(item.lower()) for item in array]
 
-    logging.info("elements:")
-    logging.info(elements_lower)
-    logging.info("Array")
-    logging.info(array_lower)
+    # logging.info("elements:")
+    # logging.info(elements_lower)
+    # logging.info("Array")
+    # logging.info(array_lower)
 
     # Use lowercase elements for case-insensitive and "plural"-insensitive comparison
     return [element for element in elements_lower if element in array_lower]
+
 
 def append_without_duplicates(existing_array, elements_to_append):
     # Convert the existing array to a set to remove duplicates

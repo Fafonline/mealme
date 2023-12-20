@@ -206,6 +206,7 @@ def create_menu():
 def update_menu(menu_id):
     data = request.get_json()
     menu_meals = mealSelector.generate_meals(data)
+    logger.info("Updated meals:{}".format(menu_meals))
     menu_data = {
         "id": menu_id,
         "meals": menu_meals
